@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d1694fd24bc048c0b323e9818d333cca" Name="Diagram1">
+        <EntityTypeShape EntityType="Models.Asiento" Width="1.5" PointX="5.25" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Boleto" Width="1.5" PointX="7.5" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.EstadoAsiento" Width="1.5" PointX="5.25" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.EstadoPago" Width="1.5" PointX="7.5" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.EstadoReserva" Width="1.5" PointX="5.25" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Funcion" Width="1.5" PointX="5.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.FuncionAsiento" Width="1.5" PointX="7.5" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Genero" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.MetodoPago" Width="1.5" PointX="7.5" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Pago" Width="1.5" PointX="9.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Pelicula" Width="1.5" PointX="3" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Reserva" Width="1.5" PointX="7.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Rol" Width="1.5" PointX="3" PointY="17.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Sala" Width="1.5" PointX="3" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Sucursal" Width="1.5" PointX="0.75" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.TipoSala" Width="1.5" PointX="0.75" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Usuario" Width="1.5" PointX="5.25" PointY="16.875" IsExpanded="true" />
+        <AssociationConnector Association="Models.FK__Asiento__ID_Sala__02084FDA" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Asiento__ID_Sala__2FCF1A8A" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__FuncionAs__ID_As__32AB8735" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_Boleto_Asiento" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Boleto__ID_Reser__47A6A41B" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__FuncionAs__ID_Es__05D8E0BE" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__FuncionAs__ID_Es__339FAB6E" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Pago__ID_Estadop__07C12930" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Pago__ID_Estadop__3587F3E0" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Reserva__ID_REst__0C85DE4D" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Reserva__ID_REst__3A4CA8FD" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Funcion__ID_Peli__02FC7413" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Funcion__ID_Peli__30C33EC3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Funcion__ID_Sala__03F0984C" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Funcion__ID_Sala__31B762FC" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__FuncionAs__ID_Fu__06CD04F7" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__FuncionAs__ID_Fu__3493CFA7" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Reserva__ID_Func__0B91BA14" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Reserva__ID_Func__395884C4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Pelicula__ID_Gen__0A9D95DB" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Pelicula__ID_Gen__3864608B" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Pago__ID_Metodo__08B54D69" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Pago__ID_Metodo__367C1819" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Pago__ID_Reserva__09A971A2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Pago__ID_Reserva__37703C52" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Reserva__ID_Usua__44CA3770" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Usuario__ID_Rol__45BE5BA9" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Sala__ID_Sucursa__0E6E26BF" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Sala__ID_Sucursa__3C34F16F" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Sala__SAL_Tipo__0F624AF8" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK__Sala__SAL_Tipo__3D2915A8" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
