@@ -314,6 +314,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\AutenticationAttribute.cs" />
+    <Compile Include="ViewModels\EditarReservaViewModel.cs" />
     <Compile Include="ViewModels\ReservaViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -363,13 +364,13 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\Registro.cshtml" />
     <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Home\DashboardCliente.cshtml" />
     <Content Include="Views\Home\HistorialReservas.cshtml" />
+    <Content Include="Views\Home\Detalles.cshtml" />
+    <Content Include="Views\Home\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
