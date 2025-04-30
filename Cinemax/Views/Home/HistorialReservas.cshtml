@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "HistorialReservas";
+    ViewBag.Title = "HistorialReservas"; //Reservas de empleado
     Layout = null;
 }
 @model IEnumerable<Cinemax.ViewModels.ReservaViewModel>
@@ -143,60 +143,64 @@
                             </div>
                         </nav>
                     </header>
-                    
-                        <table class="table">
-                            <thead>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID Reserva</th>
+                                <th>Función</th>
+                                <th>Película</th>
+                                <th>Precio</th>
+                                <th>Sala</th>
+                                <th>Asientos</th>
+                                <th>QR</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var reserva in Model)
+                            {
                                 <tr>
-                                    <th>ID Reserva</th>
-                                    <th>Función</th>
-                                    <th>Película</th>
-                                    <th>Precio</th>
-                                    <th>Sala</th>
-                                    <th>Asientos</th>
-                                    <th>QR</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var reserva in Model)
-                                {
-                                    <tr>
-                                        <td>@reserva.ID_Reserva</td>
-                                        <td>@reserva.FuncionFecha.ToString("dd/MM/yyyy HH:mm")</td>
-                                        <td>@reserva.PeliculaNombre</td>
-                                        <td>@reserva.Precio.ToString("C")</td>
-                                        <td>@reserva.SalaNombre</td>
-                                        <td>@reserva.Asientos</td>
-                                        <td>@reserva.QR</td>
-                                        <td>@reserva.Estado</td>
+                                    <td>@reserva.ID_Reserva</td>
+                                    <td>@reserva.FuncionFecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@reserva.PeliculaNombre</td>
+                                    <td>@reserva.Precio.ToString("C")</td>
+                                    <td>@reserva.SalaNombre</td>
+                                    <td>@reserva.Asientos</td>
+                                    <td>@reserva.QR</td>
+                                    <td>@reserva.Estado</td>
 
-                                        <td>
-                                     
-                                            <a href="@Url.Action("Detalles", "Home", new { id = reserva.ID_Reserva })"
-                                               class="btn btn-sm btn-info" title="Visualizar">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
+                                    <td>
 
-                                         
-                                            <a href="@Url.Action("Editar", "Home", new { id = reserva.ID_Reserva })"
-                                               class="btn btn-sm btn-warning" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                        <a href="@Url.Action("Detalles", "Home", new { id = reserva.ID_Reserva })"
+                                           class="btn btn-sm btn-info" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
 
-                                           
-                                            <a href="@Url.Action("Eliminar", "Home", new { id = reserva.ID_Reserva })"
-                                               class="btn btn-sm btn-danger" title="Eliminar"
-                                               onclick="return confirm('¿Estás seguro de eliminar esta reserva?');">
+
+                                        <a href="@Url.Action("Editar", "Home", new { id = reserva.ID_Reserva })"
+                                           class="btn btn-sm btn-warning" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+
+                                        <form method="post" action="@Url.Action("CancelarReserva", "Home")" style="display:inline;"
+                                              onsubmit="return confirm('¿Seguro que deseas cancelar esta reserva?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@reserva.ID_Reserva" />
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Cancelar">
                                                 <i class="fas fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
+                                            </button>
+                                        </form>
 
-                            </tbody>
-                        </table>
 
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
 
 
                 </div>

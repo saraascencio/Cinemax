@@ -98,7 +98,7 @@ namespace Cinemax.Controllers
             return View();
         }
 
-
+        [Autenticacion]
         public ActionResult Logout()
         {
             Session.Clear();
@@ -136,6 +136,8 @@ namespace Cinemax.Controllers
             base.Dispose(disposing);
         }
 
+        [Autenticacion]
+        //Historial reservas empleado
         public ActionResult HistorialReservas()
         {
             
@@ -184,7 +186,8 @@ namespace Cinemax.Controllers
             return View(listadoFinal);
         }
 
-
+        [Autenticacion]
+        // Detalles empleado 
         public ActionResult Detalles(int id)
         {
             var consultaDetalle = (from r in _dbContext.Reserva
@@ -235,6 +238,8 @@ namespace Cinemax.Controllers
             return View(reservaAgrupada);
         }
 
+        [Autenticacion]
+        //Editar empleado 
         public ActionResult Editar(int id, int? idPeliculaSeleccionada, int? idFuncionSeleccionada,
              string asientosSeleccionados = null)
         {
@@ -269,17 +274,17 @@ namespace Cinemax.Controllers
             
             var asientosActuales = new List<string>();
 
-            // Caso especial cuando se indica explícitamente vacío
+           
             if (asientosSeleccionados == "Vacio")
             {
                 asientosActuales = new List<string>();
             }
-            // Caso normal con asientos seleccionados
+           
             else if (!string.IsNullOrEmpty(asientosSeleccionados))
             {
                 asientosActuales = asientosSeleccionados.Split(',').ToList();
             }
-            // Caso inicial (cargar asientos originales)
+          
             else
             {
                 asientosActuales = reservaActual.Boleto?
@@ -344,8 +349,10 @@ namespace Cinemax.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [Autenticacion]
 
+        [HttpPost]
+        // Editar empleado 
         public ActionResult Editar(EditarReservaViewModel model, string action)
         {
             
@@ -533,7 +540,31 @@ namespace Cinemax.Controllers
         }
 
 
-      
-       
+        // Cancelar reserva empleado 
+        [HttpPost]
+        public ActionResult CancelarReserva(int id)
+        {
+            var reserva = _dbContext.Reserva.FirstOrDefault(r => r.ID_Reserva == id);
+            if (reserva == null)
+            {
+                return HttpNotFound();
+            }
+
+            var estadoCancelado = _dbContext.EstadoReserva.FirstOrDefault(e => e.ESR_Estado == "Cancelada");
+            if (estadoCancelado == null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest, "No se encontró el estado 'Cancelada'.");
+            }
+
+            reserva.ID_REstado = estadoCancelado.ID_Estadoreserva;
+            _dbContext.SaveChanges();
+
+            TempData["Mensaje"] = "La reserva fue cancelada correctamente.";
+            return RedirectToAction("Detalles", "Home", new { id = reserva.ID_Reserva });
+
+        }
+
+
+
     }
 }

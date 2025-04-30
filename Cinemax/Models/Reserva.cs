@@ -28,6 +28,9 @@ namespace Cinemax.Models
         public Nullable<int> ID_REstado { get; set; }
         public System.DateTime RES_Reserva { get; set; }
         public string RES_QR { get; set; }
+        public string Nombre_Cliente { get; set; }
+        public string Telefono_Cliente { get; set; }
+        public string Email_Cliente { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Boleto> Boleto { get; set; }

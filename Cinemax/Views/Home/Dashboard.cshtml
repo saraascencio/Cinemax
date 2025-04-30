@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Dashboard";
-    Layout = null; // No usar layout
+    Layout = null; //   Este es el de empleado
 }
 
 <!DOCTYPE html>
@@ -11,6 +11,7 @@
     <title>@ViewBag.Title</title>
     <link rel="shortcut icon" type="image/png" href="~/Content/assets/images/logos/logocine.png" />
     <link rel="stylesheet" href="~/Content/assets/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
     <!-- Body Wrapper -->
@@ -115,6 +116,7 @@
                                            aria-expanded="false">
                                             <img src="../Content/assets/images/profile/trabajador.png" alt="" width="35" height="35"
                                                  class="rounded-circle">
+                                          
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                             <div class="message-body">
@@ -122,14 +124,7 @@
                                                     <i class="ti ti-user fs-6"></i>
                                                     <p class="mb-0 fs-3">Mi Perfil</p>
                                                 </a>
-                                                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                                    <i class="ti ti-mail fs-6"></i>
-                                                    <p class="mb-0 fs-3">Mi cuenta</p>
-                                                </a>
-                                                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                                    <i class="ti ti-list-check fs-6"></i>
-                                                    <p class="mb-0 fs-3">Mis tareas</p>
-                                                </a>
+                                               
                                                 <form method="post" action="@Url.Action("Logout", "Home")">
                                                     <button type="submit" class="btn btn-outline-primary mx-3 mt-2 d-block">Cerrar sesión</button>
                                                 </form>
