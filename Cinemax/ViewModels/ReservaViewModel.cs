@@ -14,6 +14,8 @@ namespace Cinemax.ViewModels
         public string SalaNombre { get; set; }
         public string Asientos { get; set; }
         public string QR { get; set; }
+        public string QRTexto { get; set; } // Texto QR original (ej: "QR123456")
+        public string QRImagen { get; set; } // Imagen QR en base64
         public string Estado { get; set; }
     }
 }
