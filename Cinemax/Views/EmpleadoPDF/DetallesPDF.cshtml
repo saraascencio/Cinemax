@@ -1,0 +1,161 @@
+﻿@{
+    ViewBag.Title = "DetallesPDF";
+    Layout = null;
+}
+@{
+    Layout = null;
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Comprobante de Reserva - CineMax</title>
+        <style>
+
+            body {
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+                background-color: white;
+            }
+
+            .ticket-container {
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 0 15px rgba(0,0,0,0.1);
+                padding: 30px;
+                max-width: 600px;
+                margin: 250px auto; 
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+                border-bottom: 2px solid #e63946;
+            }
+
+            .logo {
+                height: 80px;
+                margin-bottom: 15px;
+            }
+
+            .title {
+                font-size: 28px;
+                font-weight: bold;
+                color: #1d3557;
+                margin-bottom: 5px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+                color: #457b9d;
+                margin-bottom: 20px;
+            }
+
+
+            .details {
+                margin-top: 20px;
+            }
+
+            .detail-row {
+                margin-bottom: 12px;
+                display: flex;
+            }
+
+            .label {
+                font-weight: bold;
+                color: #1d3557;
+                width: 140px;
+                flex-shrink: 0;
+            }
+
+            .value {
+                color: #457b9d;
+            }
+
+            .qr-container {
+                text-align: center;
+                margin: 30px 0;
+                padding: 20px;
+                background-color: #f1faee;
+                border-radius: 8px;
+                border: 1px dashed #a8dadc;
+            }
+
+            .qr-image {
+                width: 150px;
+                height: 150px;
+                margin: 0 auto;
+            }
+
+            .footer {
+                margin-top: 40px;
+                font-size: 12px;
+                text-align: center;
+                color: #6c757d;
+                padding-top: 20px;
+                border-top: 1px solid #e9ecef;
+            }
+
+            .highlight {
+                color: #e63946;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="ticket-container">
+            <div class="header">
+                <img src="@Url.Content("~/Content/assets/images/logos/logocine.png")" alt="CineMax Logo" class="logo">
+                <div class="title">COMPROBANTE DE RESERVA</div>
+                <div class="subtitle">Gracias por elegir CineMax</div>
+            </div>
+
+            <div class="details">
+                <div class="detail-row">
+                    <span class="label">N° Reserva:</span>
+                    <span class="value highlight">@Model.ID_Reserva</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Película:</span>
+                    <span class="value">@Model.PeliculaNombre</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Fecha y Hora:</span>
+                    <span class="value">@Model.FuncionFecha.ToString("f")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Sala:</span>
+                    <span class="value">@Model.SalaNombre</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Asientos:</span>
+                    <span class="value highlight">@Model.Asientos</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Precio Total:</span>
+                    <span class="value highlight">@Model.Precio.ToString("C")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Estado:</span>
+                    <span class="value">@Model.Estado</span>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.QRImagen))
+            {
+                <div class="qr-container">
+                    <p style="margin-bottom: 15px;">Presente este código en taquilla</p>
+                    <img src="@Model.QRImagen" class="qr-image" alt="Código QR de reserva @Model.QRTexto" />
+                    <p style="margin-top: 10px; font-size: 12px;">Código: @Model.QRTexto</p>
+                </div>
+            }
+
+            <div class="footer">
+                <p>© @DateTime.Now.Year · Todos los derechos reservados</p>
+            </div>
+        </div>
+    </body>
+</html>
+}

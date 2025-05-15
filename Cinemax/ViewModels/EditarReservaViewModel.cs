@@ -21,6 +21,11 @@ namespace Cinemax.ViewModels
         // Función
         public int ID_Funcion { get; set; }
         public string FuncionFecha { get; set; }
+        public DateTime? FechaSeleccionada { get; set; }
+        public string HoraSeleccionada { get; set; }
+        public IEnumerable<SelectListItem> HorasDisponibles { get; set; }
+       
+
         public IEnumerable<SelectListItem> Funciones { get; set; }
 
         // Información de la función
