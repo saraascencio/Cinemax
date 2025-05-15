@@ -179,13 +179,13 @@
                                         </a>
 
 
-                                        <a href="@Url.Action("Editar", "Home", new { id = reserva.ID_Reserva })"
+                                        <a href="@Url.Action("Editar", "EmpleadoHistorial", new { id = reserva.ID_Reserva })"
                                            class="btn btn-sm btn-warning" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>
 
 
-                                        <form method="post" action="@Url.Action("CancelarReserva", "Home")" style="display:inline;"
+                                        <form method="post" action="@Url.Action("CancelarReserva", "EmpleadoHistorial")" style="display:inline;"
                                               onsubmit="return confirm('¿Seguro que deseas cancelar esta reserva?');">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@reserva.ID_Reserva" />
