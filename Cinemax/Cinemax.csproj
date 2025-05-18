@@ -251,6 +251,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EmpleadoCrearController.cs" />
     <Compile Include="Controllers\EmpleadoHistorialController.cs" />
     <Compile Include="Controllers\EmpleadoPDFController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -328,6 +329,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\AutenticationAttribute.cs" />
+    <Compile Include="ViewModels\CrearReservaEViewModel.cs" />
     <Compile Include="ViewModels\EditarReservaViewModel.cs" />
     <Compile Include="ViewModels\ReservaViewModel.cs" />
   </ItemGroup>
@@ -391,6 +393,8 @@
     <Content Include="Views\EmpleadoPDF\DetallesPDF.cshtml" />
     <Content Include="Views\EmpleadoHistorial\Editar.cshtml" />
     <Content Include="Views\EmpleadoHistorial\HistorialReservas.cshtml" />
+    <Content Include="Views\EmpleadoCrear\Crear.cshtml" />
+    <Content Include="Views\EmpleadoCrear\Confirmacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
