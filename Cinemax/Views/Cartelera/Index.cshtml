@@ -1,0 +1,56 @@
+﻿@model List<Cinemax.Models.Pelicula>
+
+@{
+    ViewBag.Title = "Cartelera";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    var fechaSeleccionada = ViewBag.FechaSeleccionada as DateTime?;
+    var generoSeleccionado = ViewBag.GeneroSeleccionado as string;
+}
+
+<h2>🎬 Cartelera de películas - @(fechaSeleccionada?.ToString("dd/MM/yyyy") ?? "Fecha no disponible")</h2>
+
+
+
+<form method="get">
+    <label>Género:</label>
+    <div class="mb-3">
+        <label class="d-block">Filtrar por género:</label>
+        <div class="btn-group" role="group">
+            <a href="@Url.Action("Index", "Cartelera", new { genero = "", fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })"
+               class="btn btn-outline-primary @(string.IsNullOrEmpty(generoSeleccionado) ? "active" : "")">Todos</a>
+
+            @foreach (var g in ViewBag.Generos as List<string>)
+            {
+                <a href="@Url.Action("Index", "Cartelera", new { genero = g, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })"
+                   class="btn btn-outline-primary @(generoSeleccionado == g ? "active" : "")">@g</a>
+            }
+        </div>
+    </div>
+
+
+    <label>Fecha:</label>
+    <label class="d-block">Seleccionar fecha:</label>
+    <input type="date" name="fecha" class="form-control mb-3" value="@fechaSeleccionada?.ToString("yyyy-MM-dd")"/>
+    <button type="submit" class="btn btn-primary">Buscar</button>
+
+
+</form>
+
+<hr />
+
+<div class="row">
+    @foreach (var p in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm rounded">
+                <img src="@p.PEL_ImagenURL" class="card-img-top" style="height:300px; object-fit:cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@p.PEL_Titulo</h5>
+                    <p class="card-text">@p.PEL_Sinopsis</p>
+                    <p><strong>Duración:</strong> @p.PEL_Duracion</p>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
