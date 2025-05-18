@@ -253,6 +253,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\EmpleadoCrearController.cs" />
     <Compile Include="Controllers\EmpleadoHistorialController.cs" />
+    <Compile Include="Controllers\EmpleadoMetricasController.cs" />
     <Compile Include="Controllers\EmpleadoPDFController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -387,7 +388,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\Registro.cshtml" />
-    <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Home\DashboardCliente.cshtml" />
     <Content Include="Views\EmpleadoPDF\Detalles.cshtml" />
     <Content Include="Views\EmpleadoPDF\DetallesPDF.cshtml" />
@@ -395,6 +395,8 @@
     <Content Include="Views\EmpleadoHistorial\HistorialReservas.cshtml" />
     <Content Include="Views\EmpleadoCrear\Crear.cshtml" />
     <Content Include="Views\EmpleadoCrear\Confirmacion.cshtml" />
+    <Content Include="Views\EmpleadoMetricas\Dashboard.cshtml" />
+    <Content Include="Views\EmpleadoMetricas\DashboardImpresion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
