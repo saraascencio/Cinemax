@@ -18,28 +18,27 @@ namespace Cinemax.Controllers
         public ActionResult Index(DateTime? fecha, string genero, int pagina = 1)
         {
             DateTime fechaBusqueda = fecha?.Date ?? DateTime.Today;
-            int peliculasPorPagina = 6;
+            int funcionesPorPagina = 6;
 
             var funciones = db.Funcion
                 .Include(f => f.Pelicula.Genero)
+                .Include(f => f.Sala)
                 .Where(f => DbFunctions.TruncateTime(f.FUN_Fechahora) == fechaBusqueda)
                 .ToList()
                 .Where(f => string.IsNullOrEmpty(genero) || f.Pelicula.Genero.GEN_Nombre == genero)
-                .GroupBy(f => f.Pelicula)
-                .Select(g => g.Key)
                 .ToList();
 
-            int totalPeliculas = funciones.Count();
-            int totalPaginas = (int)Math.Ceiling((double)totalPeliculas / peliculasPorPagina);
+            int totalFunciones = funciones.Count();
+            int totalPaginas = (int)Math.Ceiling((double)totalFunciones / funcionesPorPagina);
 
-            var peliculasPaginadas = funciones
-                .Skip((pagina - 1) * peliculasPorPagina)
-                .Take(peliculasPorPagina)
+            var funcionesPaginadas = funciones
+                .Skip((pagina - 1) * funcionesPorPagina)
+                .Take(funcionesPorPagina)
                 .ToList();
 
             var viewModel = new CarteleraViewModel
             {
-                Peliculas = peliculasPaginadas,
+                Funciones = funcionesPaginadas,
                 PaginaActual = pagina,
                 TotalPaginas = totalPaginas
             };

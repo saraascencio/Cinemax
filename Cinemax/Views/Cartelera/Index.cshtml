@@ -49,19 +49,29 @@
 
     <!-- Tarjetas de películas -->
     <div class="row">
-        @foreach (var p in Model.Peliculas)
+        @foreach (var f in Model.Funciones)
         {
-            <div class="col-md-4 mb-4 d-flex align-items-stretch">
-                <div class="card shadow-sm rounded w-100">
-                    <img src="@p.PEL_ImagenURL" class="card-img-top" style="height:250px; object-fit:cover;" alt="@p.PEL_Titulo" />
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-semibold">@p.PEL_Titulo</h5>
-                        <p class="card-text text-muted small flex-grow-1">@p.PEL_Sinopsis</p>
-                        <p class="card-text mt-2"><strong>Duración:</strong> @($"{p.PEL_Duracion.Hours}h {p.PEL_Duracion.Minutes}min")</p>
+            <div class="col-md-6 mb-4">
+                <a href="@Url.Action("Detalles", "Funciones", new { id = f.ID_Funcion })" class="text-decoration-none text-dark">
+                    <div class="card flex-row shadow-sm rounded overflow-hidden" style="min-height: 180px;">
+                        <div class="col-4 p-0">
+                            <img src="@f.Pelicula.PEL_ImagenURL" alt="@f.Pelicula.PEL_Titulo" class="img-fluid h-100 w-100 object-fit-cover" />
+                        </div>
+                        <div class="col-8 p-3 d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="fw-bold">@f.Pelicula.PEL_Titulo</h5>
+                                <p class="text-muted small mb-1">@f.Pelicula.PEL_Sinopsis</p>
+                                <p class="mb-0"><strong>Hora:</strong> @f.FUN_Fechahora.ToString("hh:mm tt")</p>
+                                <p class="mb-0"><strong>Sala:</strong> @f.Sala.SAL_Nombre</p>
+                                <p class="mb-0"><strong>Precio:</strong> $@f.FUN_Precio.ToString("F2")</p>
+                            </div>
+                            <span class="text-primary mt-2 small">Ver detalles →</span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         }
+
     </div>
 
     <!-- Paginación real -->

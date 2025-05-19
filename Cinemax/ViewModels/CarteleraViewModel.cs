@@ -9,7 +9,7 @@ namespace Cinemax.ViewModels
 {
     public class CarteleraViewModel
     {
-        public List<Pelicula> Peliculas { get; set; }
+         public List<Funcion> Funciones { get; set; }
         public int PaginaActual { get; set; }
         public int TotalPaginas { get; set; }
     }
