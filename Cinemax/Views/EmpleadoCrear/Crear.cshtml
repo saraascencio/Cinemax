@@ -1,0 +1,593 @@
+﻿@model Cinemax.ViewModels.CrearReservaEViewModel
+@{
+    ViewBag.Title = "Crear Reserva";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" type="image/png" href="~/Content/assets/images/logos/logocine.png" />
+    <link rel="stylesheet" href="~/Content/assets/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <!-- Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+         data-sidebar-position="fixed" data-header-position="fixed">
+
+        <!-- Acá había una barra superior pero eran promociones de comprar plantillas -->
+        <!-- Sidebar Start -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div>
+                <div class="brand-logo d-flex align-items-center justify-content-between">
+                    <a href="@Url.Action("Dashboard", "EmpleadoMetricas")" class="text-nowrap logo-img">
+                        <img src="~/Content/assets/images/logos/logocine.png" alt="Logo" style="width: 100px; height: auto;">
+                    </a>
+
+                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-x fs-8"></i>
+                    </div>
+                </div>
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                    <ul id="sidebarnav">
+                        <li class="nav-small-cap">
+                            <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4"></iconify-icon>
+                            <span class="hide-menu">Home</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Dashboard", "EmpleadoMetricas")">
+                                <iconify-icon icon="ph:ticket-duotone"></iconify-icon>
+                                <span class="hide-menu">Dashboard</span>
+                            </a>
+
+                        </li>
+
+
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("HistorialReservas", "EmpleadoHistorial")">
+                                <iconify-icon icon="mdi:clipboard-text-clock-outline"></iconify-icon>
+                                <span class="hide-menu">Historial Reservas</span>
+                            </a>
+                        </li>
+
+
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Crear", "EmpleadoCrear")">
+                                <iconify-icon icon="solar:calendar-add-line-duotone"></iconify-icon>
+                                <span class="hide-menu">Crear Reservas</span>
+                            </a>
+                        </li>
+
+
+
+
+
+                    </ul>
+
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+
+            <div class="body-wrapper-inner">
+                <div class="container-fluid">
+                    <!--  Header Start -->
+                    <header class="app-header">
+                        <nav class="navbar navbar-expand-lg navbar-light">
+                            <ul class="navbar-nav">
+                                <li class="nav-item d-block d-xl-none">
+                                    <a class="nav-link sidebartoggler " id="headerCollapse" href="javascript:void(0)">
+                                        <i class="ti ti-menu-2"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link " href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown"
+                                       aria-expanded="false">
+                                        <iconify-icon icon="solar:bell-linear" class="fs-6"></iconify-icon>
+                                        <div class="notification bg-primary rounded-circle"></div>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-animate-up" aria-labelledby="drop1">
+                                        <div class="message-body">
+                                            <a href="javascript:void(0)" class="dropdown-item">
+                                                Item 1
+                                            </a>
+                                            <a href="javascript:void(0)" class="dropdown-item">
+                                                Item 2
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                                <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link " href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                                           aria-expanded="false">
+                                            <img src="../Content/assets/images/profile/trabajador.png" alt="" width="35" height="35"
+                                                 class="rounded-circle">
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                                            <div class="message-body">
+                                                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                                    <i class="ti ti-user fs-6"></i>
+                                                    <p class="mb-0 fs-3">Mi Perfil</p>
+                                                </a>
+                                                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                                    <i class="ti ti-mail fs-6"></i>
+                                                    <p class="mb-0 fs-3">Mi cuenta</p>
+                                                </a>
+                                                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                                    <i class="ti ti-list-check fs-6"></i>
+                                                    <p class="mb-0 fs-3">Mis tareas</p>
+                                                </a>
+                                                <form method="post" action="@Url.Action("Logout", "Home")">
+                                                    <button type="submit" class="btn btn-outline-primary mx-3 mt-2 d-block">Cerrar sesión</button>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </header>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <!-- Sección de Cliente -->
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title" style="font-size: 14px" >Información del Cliente</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.EmailCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.EmailCliente, new { htmlAttributes = new { @class = "form-control", id = "emailCliente" } })
+                                            @Html.ValidationMessageFor(model => model.EmailCliente, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-2" style="display: flex; gap: 5px; align-items: center; margin-top:15px; margin-bottom:15px;">
+                                            <button type="button" class="btn btn-info" id="btnBuscarCliente" style="padding: 3px 8px; font-size: 14px; white-space: nowrap;">Buscar Cliente</button>
+                                            <button type="button" class="btn btn-primary" id="btnClienteNuevo" style="padding: 3px 8px; font-size: 14px; white-space: nowrap; background-color: #800080; border-color: #800080;">¿Cliente nuevo?</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NombreCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.NombreCliente, new { htmlAttributes = new { @class = "form-control", id = "nombreCliente", disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.NombreCliente, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.EmailCliente2, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.EmailCliente2, new { htmlAttributes = new { @class = "form-control", id = "emailCliente2", disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.EmailCliente2, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TelefonoCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.TelefonoCliente, new { htmlAttributes = new { @class = "form-control", id = "telefonoCliente", disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.TelefonoCliente, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    @Html.HiddenFor(model => model.UsuarioId, new { id = "usuarioId" })
+                                </div>
+                            </div>
+
+                            <!-- Sección de Película y Función -->
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title" style="font-size: 14px;">Selección de Película y Función</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.PeliculaId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.DropDownListFor(model => model.PeliculaId, Model.Peliculas, "-- Seleccione una película --", new { @class = "form-control", id = "peliculaId" })
+                                            @Html.ValidationMessageFor(model => model.PeliculaId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FechaSeleccionada, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            <input type="text" id="fechaSeleccionada" name="FechaSeleccionada" class="form-control" disabled />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FuncionId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            <select id="funcionId" name="FuncionId" class="form-control" disabled>
+                                                <option value="">-- Seleccione una hora --</option>
+                                            </select>
+                                            @Html.ValidationMessageFor(model => model.FuncionId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", id = "precio" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NombreSala, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.NombreSala, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", id = "nombreSala" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección de Asientos -->
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title" style="font-size: 14px; margin-top: 15px">Selección de Asientos</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Asientos Disponibles</label>
+                                        <div class="col-md-10">
+                                            <select id="asientosDisponibles" class="form-control" size="5" multiple disabled>
+                                                <option>Seleccione una función primero</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="margin-top: 15px;">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-success" id="btnAgregarAsiento" style="font-size: 14px;">Agregar Asiento</button>
+                                                <button type="button" class="btn btn-danger" id="btnQuitarAsiento" style="font-size: 14px;">Quitar Asiento</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group"  style="margin-top: 15px;">
+                                        <label class="control-label col-md-2">Asientos Seleccionados</label>
+                                        <div class="col-md-10">
+                                            <select id="asientosSeleccionadosLista" class="form-control" size="5" multiple>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="margin-top: 15px;">
+                                        @Html.LabelFor(model => model.AsientosSeleccionados, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.TextAreaFor(model => model.AsientosSeleccionados, new { @class = "form-control", @readonly = "readonly", rows = "2", id = "asientosSeleccionados" })
+                                            @Html.ValidationMessageFor(model => model.AsientosSeleccionados, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección de Método de Pago -->
+                            <div class="panel panel-primary"  style="margin-top: 15px;">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"  style="font-size: 14px; margin-top: 15px">Método de Pago</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                      
+                                        <div class="col-md-10">
+                                            @Html.DropDownListFor(model => model.MetodoPagoId, Model.MetodosPago, "-- Seleccione un método de pago --", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.MetodoPagoId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 15px">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Guardar Reserva" class="btn btn-primary btn-lg" style="font-size: 14px;" />
+                                    @Html.ActionLink("Cerrar", "HistorialReservas", "EmpleadoHistorial", new { @class = "btn btn-default btn-cancel", style = "font-size: 14px;" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+        
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Content/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/Content/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/assets/js/sidebarmenu.js"></script>
+    <script src="~/Content/assets/js/app.min.js"></script>
+    <script src="~/Content/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="~/Content/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="~/Content/assets/js/dashboard.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- solar icons -->
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+
+
+</body>
+</html>
+
+<style>
+    .btn-default {
+        background-color: #e1bee7;
+        border-color: #ce93d8;
+        color: #4a148c;
+    }
+
+        .btn-default:hover {
+            background-color: #ce93d8;
+            border-color: #ba68c8;
+        }
+
+    .btn-primary {
+        background-color: #7b1fa2;
+        border-color: #7b1fa2;
+    }
+
+        .btn-primary:hover {
+            background-color: #6a1b9a;
+            border-color: #6a1b9a;
+        }
+
+    .btn-danger { 
+        
+        background-color: #d32f2f;
+        border-color: #d32f2f;
+    }
+
+
+</style>
+
+<script>
+     $(document).ready(function () {
+
+         // Esta parte es para que el empleado busque al cliente
+         // especialmente si este ya tiene una cuenta con nosotros
+         $("#btnBuscarCliente").click(function () {
+        var email = $("#emailCliente").val();
+        if (email) {
+        $.ajax({
+            url: '@Url.Action("BuscarCliente")',
+            type: 'POST',
+            data: { email: email },
+            success: function (result) {
+                if (result.success) {
+                    $("#usuarioId").val(result.usuarioId);
+                    
+                    $("#nombreCliente").val(result.nombreCliente).prop("disabled", true);
+                    $("#telefonoCliente").val(result.telefonoCliente).prop("disabled", true);
+                    $("#emailCliente2").val(result.emailCliente2).prop("disabled", true);
+                    
+                    $("<input>").attr({
+                        type: "hidden",
+                        id: "clienteExistente",
+                        name: "clienteExistente",
+                        value: "true"
+                    }).appendTo("form");
+                    alert("Cliente encontrado correctamente.");
+                } else {
+                    $("#usuarioId").val("");
+                    alert(result.message || "Cliente no encontrado. Presione '¿Cliente nuevo?' para ingresar datos manualmente.");
+                }
+            },
+            error: function () {
+                alert("Error al buscar el cliente.");
+            }
+            });
+            } else {
+            alert("Ingrese un email para buscar el cliente.");
+            }
+            });
+
+        
+         $("#btnClienteNuevo").click(function () {
+         
+             $("#emailCliente").val("").prop("disabled", true);
+             $("#nombreCliente").val("").prop("disabled", false);
+             $("#emailCliente2").val("").prop("disabled", false);
+             $("#telefonoCliente").val("").prop("disabled", false);
+
+             
+             $("#usuarioId").val("");
+
+           
+             $("#clienteExistente").remove();
+
+             
+             $("#nombreCliente").focus();
+         });
+
+       
+         flatpickr("#fechaSeleccionada", {
+        dateFormat: "Y-m-d",
+        defaultDate: new Date(),
+        disableMobile: true,
+        minDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+        if (dateStr) {
+            cargarHorasDisponibles(dateStr);
+        }
+        }
+        });
+
+        var fechasDisponibles = [];
+
+         $("#peliculaId").change(function () {
+             var peliculaId = $(this).val();
+             if (peliculaId) {
+                 $.ajax({
+                     url: '@Url.Action("ObtenerFechasDisponibles")',
+                     type: 'POST',
+                     data: { peliculaId: peliculaId },
+                     success: function (fechas) {
+                         fechasDisponibles = fechas;
+                         var fechaInput = $("#fechaSeleccionada");
+                         fechaInput.prop('disabled', false);
+                         fechaInput.val('');
+                         $("#funcionId").empty().append($('<option></option>').val('').html('-- Seleccione una hora --')).prop('disabled', true);
+                         $("#precio").val('');
+                         $("#nombreSala").val('');
+                     }
+                 });
+             }
+         
+            else {
+                $("#fechaSeleccionada").val('').prop('disabled', true);
+                $("#funcionId").empty().append($('<option></option>').val('').html('-- Seleccione una hora --')).prop('disabled', true);
+            
+            }
+        });
+
+
+         // Después que el empleado haya seleccionado una fecha en particular,
+         // Se carga este combo box con las horas disponibles
+        function cargarHorasDisponibles(fechaSeleccionada) {
+        var peliculaId = $("#peliculaId").val();
+        if (!peliculaId) return;
+
+        $.ajax({
+        url: '@Url.Action("ObtenerHorasDisponibles")',
+        type: 'POST',
+        data: {
+            peliculaId: peliculaId,
+            fechaSeleccionada: fechaSeleccionada
+        },
+        success: function (response) {
+            var funcionSelect = $("#funcionId");
+            funcionSelect.empty().append($('<option></option>').val('').html('-- Seleccione una hora --'));
+
+            if (response.success && response.horas && response.horas.length > 0) {
+                funcionSelect.prop('disabled', false);
+                $.each(response.horas, function(i, hora) {
+                    funcionSelect.append($('<option></option>').val(hora.FuncionId).html(hora.Hora));
+                });
+            } else {
+                funcionSelect.prop('disabled', true);
+            }
+        }
+        });
+        }
+
+
+
+         // Cargar precio, sala y asientos disponibles cuando se selecciona una función
+         $("#funcionId").change(function () {
+        var funcionId = $(this).val();
+        if (funcionId) {
+        $.ajax({
+            url: '@Url.Action("ObtenerDetallesFuncion")',
+            type: 'POST',
+            data: { funcionId: funcionId },
+            success: function (funcion) {
+                if (funcion.success) {
+                    $("#precio").val(funcion.data.precio);
+                    $("#nombreSala").val(funcion.data.salaNombre);
+
+
+                    $.ajax({
+                        url: '@Url.Action("ObtenerAsientosDisponibles")',
+                        type: 'POST',
+                        data: { funcionId: funcionId },
+                        success: function (asientos) {
+                            var asientosSelect = $("#asientosDisponibles");
+                            asientosSelect.empty();
+                            $.each(asientos, function (i, asiento) {
+                                asientosSelect.append($('<option></option>').val(asiento.Nombre).html(asiento.Nombre));
+                            });
+                            asientosSelect.prop('disabled', false);
+                        }
+                    });
+                }
+            }
+        });
+        } else {
+        $("#precio").val('');
+        $("#nombreSala").val('');
+        $("#asientosDisponibles").empty().append($('<option></option>').html('Seleccione una función primero')).prop('disabled', true);
+        }
+        });
+
+
+         $("#btnAgregarAsiento").click(function () {
+             var asientosDisponibles = $("#asientosDisponibles");
+             var asientosSeleccionadosLista = $("#asientosSeleccionadosLista");
+             var asientosSeleccionados = $("#asientosSeleccionados");
+
+
+             var seleccionados = asientosDisponibles.val();
+             if (seleccionados && seleccionados.length > 0) {
+
+                 $.each(seleccionados, function (i, asiento) {
+                     if (asientosSeleccionadosLista.find("option[value='" + asiento + "']").length === 0) {
+                         asientosSeleccionadosLista.append($('<option></option>').val(asiento).html(asiento));
+
+
+                         asientosDisponibles.find("option[value='" + asiento + "']").remove();
+                     }
+                 });
+
+
+                 actualizarCampoAsientos();
+             } else {
+                 alert("Seleccione al menos un asiento para agregar.");
+             }
+         });
+
+
+         $("#btnQuitarAsiento").click(function () {
+             var asientosSeleccionadosLista = $("#asientosSeleccionadosLista");
+             var asientosDisponibles = $("#asientosDisponibles");
+
+
+             var seleccionados = asientosSeleccionadosLista.val();
+             if (seleccionados && seleccionados.length > 0) {
+
+                 $.each(seleccionados, function (i, asiento) {
+                     asientosSeleccionadosLista.find("option[value='" + asiento + "']").remove();
+                     asientosDisponibles.append($('<option></option>').val(asiento).html(asiento));
+                 });
+
+
+                 actualizarCampoAsientos();
+             } else {
+                 alert("Seleccione al menos un asiento para quitar.");
+             }
+         });
+
+
+         function actualizarCampoAsientos() {
+             var asientosList = [];
+             $("#asientosSeleccionadosLista option").each(function () {
+                 asientosList.push($(this).val());
+             });
+             $("#asientosSeleccionados").val(asientosList.join(", "));
+         }
+     });
+</script>

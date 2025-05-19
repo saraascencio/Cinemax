@@ -1,0 +1,133 @@
+﻿@{
+    Layout = null;
+    string rangoFechas = "";
+    if (ViewBag.FechaInicio != null && ViewBag.FechaFin != null)
+    {
+        rangoFechas = $"Del {((DateTime)ViewBag.FechaInicio).ToString("dd/MM/yyyy")} al {((DateTime)ViewBag.FechaFin).ToString("dd/MM/yyyy")}";
+    }
+    else
+    {
+        rangoFechas = "Todos los datos";
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .report-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .report-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .text-muted {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .col-md-4 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-header">
+        <div class="report-title">Reporte de Dashboard</div>
+        <div class="report-date">@DateTime.Now.ToString("dd/MM/yyyy HH:mm") - @rangoFechas</div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Ganancias totales</h5>
+                    <h3 class="card-text">@String.Format("{0:C}", ViewBag.GananciasTotales)</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Ganancias del mes</h5>
+                    <h3 class="card-text">@String.Format("{0:C}", ViewBag.GananciasMesActual)</h3>
+                    <p class="text-muted">@DateTime.Now.ToString("MMMM yyyy")</p>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Reservas confirmadas</h5>
+                    <h3 class="card-text">@ViewBag.PorcentajeConfirmadas%</h3>
+                    <p class="text-muted">Del total de reservas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Clientes registrados</h5>
+                    <h3 class="card-text">@ViewBag.PorcentajeClientesRegistrados%</h3>
+                    <p class="text-muted">Del total de reservas</p>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Reservas canceladas</h5>
+                    <h3 class="card-text">@ViewBag.PorcentajeCanceladas%</h3>
+                    <p class="text-muted">Del total de reservas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

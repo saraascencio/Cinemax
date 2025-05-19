@@ -66,18 +66,8 @@ namespace Cinemax.Controllers
         }
 
 
-        [Autenticacion]
-        public ActionResult Dashboard()
-        {
-            if (Session["TipoUsuario"] as string != "Empleado")
-            {
-                return RedirectToAction("Login");
-            }
-
-            ViewBag.Nombre = Session["Nombre"];
-            ViewBag.TipoUsuario = Session["TipoUsuario"];
-            return View();
-        }
+        
+        
 
 
         [Autenticacion]
@@ -124,7 +114,7 @@ namespace Cinemax.Controllers
             var tipoUsuario = Session["TipoUsuario"] as string;
             return tipoUsuario == "Cliente"
                 ? RedirectToAction("DashboardCliente")
-                : RedirectToAction("Dashboard");
+                : RedirectToAction("Dashboard", "EmpleadoMetricas");
         }
 
         protected override void Dispose(bool disposing)
@@ -139,6 +129,7 @@ namespace Cinemax.Controllers
 
       
 
+      
 
     }
 }

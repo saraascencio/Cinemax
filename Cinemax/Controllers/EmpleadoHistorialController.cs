@@ -21,40 +21,56 @@ namespace Cinemax.Controllers
         }
 
         [Autenticacion]
-        //Historial reservas empleado
-        public ActionResult HistorialReservas()
+        public ActionResult HistorialReservas(string Busqueda)
         {
+            // Consulta base sin filtro
+            var query = from r in _dbContext.Reserva
+                        join f in _dbContext.Funcion on r.ID_Funcion equals f.ID_Funcion
+                        join p in _dbContext.Pelicula on f.ID_Pelicula equals p.ID_Pelicula
+                        join s in _dbContext.Sala on f.ID_Sala equals s.ID_Sala
+                        join er in _dbContext.EstadoReserva on r.ID_REstado equals er.ID_Estadoreserva
+                        join b in _dbContext.Boleto on r.ID_Reserva equals b.ID_Reserva into boletos
+                        from b in boletos.DefaultIfEmpty()
+                        join a in _dbContext.Asiento on (b == null ? null : (int?)b.ID_Asiento) equals a.ID_Asiento into asientos
+                        from a in asientos.DefaultIfEmpty()
+                        select new { r, f, p, s, er, a };
 
-            var datosReservas = (from r in _dbContext.Reserva
-                                 join f in _dbContext.Funcion on r.ID_Funcion equals f.ID_Funcion
-                                 join p in _dbContext.Pelicula on f.ID_Pelicula equals p.ID_Pelicula
-                                 join s in _dbContext.Sala on f.ID_Sala equals s.ID_Sala
-                                 join er in _dbContext.EstadoReserva on r.ID_REstado equals er.ID_Estadoreserva
-                                 join b in _dbContext.Boleto on r.ID_Reserva equals b.ID_Reserva into boletos
-                                 from b in boletos.DefaultIfEmpty()
-                                 join a in _dbContext.Asiento on (b == null ? null : (int?)b.ID_Asiento) equals a.ID_Asiento into asientos
-                                 from a in asientos.DefaultIfEmpty()
-                                     // Utilizamos esta operación de agrupamiento de objetos anónimos
-                                     // Con el fin de faciltar las operaciones por grupo bajo un id reserva
-                                 group new { r, f, p, s, er, a } by r.ID_Reserva into g
-                                 select new
-                                 {
-                                     ID_Reserva = g.Key,
-                                     FuncionFecha = g.Select(x => x.f.FUN_Fechahora).FirstOrDefault(),
-                                     PeliculaNombre = g.Select(x => x.p.PEL_Titulo).FirstOrDefault(),
-                                     Precio = g.Select(x => x.f.FUN_Precio).FirstOrDefault(),
-                                     SalaNombre = g.Select(x => x.s.SAL_Nombre).FirstOrDefault(),
-                                     AsientosData = g.Where(x => x.a != null)
-                                                   .Select(x => new {
-                                                       Fila = x.a.ASI_Fila,
-                                                       Numero = x.a.ASI_Numero
-                                                   }),
-                                     QR = g.Select(x => x.r.RES_QR).FirstOrDefault(),
-                                     Estado = g.Select(x => x.er.ESR_Estado).FirstOrDefault()
-                                 }).AsEnumerable();
+            if (!string.IsNullOrEmpty(Busqueda))
+            {
+               
+                if (int.TryParse(Busqueda, out int idBuscado))
+                {
+                    
+                    query = query.Where(x => x.r.ID_Reserva == idBuscado);
+                }
+                else
+                {
+                    
+                    query = query.Where(x => x.p.PEL_Titulo.Contains(Busqueda) || x.r.RES_QR.Contains(Busqueda));
+                }
 
-            // Se optó por ViewModel para garantizar mejor funcionamiento
-            // por la unión de varias tablas que se da
+
+            }
+
+            var datosReservas = query
+                .GroupBy(x => x.r.ID_Reserva)
+                .Select(g => new
+                {
+                    ID_Reserva = g.Key,
+                    FuncionFecha = g.Select(x => x.f.FUN_Fechahora).FirstOrDefault(),
+                    PeliculaNombre = g.Select(x => x.p.PEL_Titulo).FirstOrDefault(),
+                    Precio = g.Select(x => x.f.FUN_Precio).FirstOrDefault(),
+                    SalaNombre = g.Select(x => x.s.SAL_Nombre).FirstOrDefault(),
+                    AsientosData = g.Where(x => x.a != null)
+                                  .Select(x => new {
+                                      Fila = x.a.ASI_Fila,
+                                      Numero = x.a.ASI_Numero
+                                  }),
+                    QR = g.Select(x => x.r.RES_QR).FirstOrDefault(),
+                    Estado = g.Select(x => x.er.ESR_Estado).FirstOrDefault()
+                })
+                .AsEnumerable();
+
             var listadoFinal = datosReservas.Select(x => new ReservaViewModel
             {
                 ID_Reserva = x.ID_Reserva,
@@ -66,6 +82,9 @@ namespace Cinemax.Controllers
                 QR = x.QR,
                 Estado = x.Estado
             }).ToList();
+
+            
+            ViewBag.BusquedaActual = Busqueda;
 
             return View(listadoFinal);
         }
@@ -188,16 +207,16 @@ namespace Cinemax.Controllers
 
             if (action == "eliminarAsiento")
             {
-                // Asegurarnos que la lista existe
+               
                 model.AsientosSeleccionados = model.AsientosSeleccionados ?? new List<string>();
 
-                // Eliminar el asiento si existe
+               
                 if (!string.IsNullOrEmpty(model.AsientoAEliminar))
                 {
                     model.AsientosSeleccionados.Remove(model.AsientoAEliminar);
                 }
 
-                // Redirigir con la lista actual (puede estar vacía)
+                
                 return RedirectToAction("Editar", new
                 {
                     id = model.ID_Reserva,
@@ -238,7 +257,7 @@ namespace Cinemax.Controllers
 
                             if (reserva == null) return HttpNotFound();
 
-                            // Eliminar boletos existentes
+                           
                             _dbContext.Boleto.RemoveRange(reserva.Boleto);
 
                             if (model.AsientosSeleccionados != null && model.AsientosSeleccionados.Any())
@@ -369,7 +388,7 @@ namespace Cinemax.Controllers
         }
 
 
-        // Cancelar reserva empleado 
+       
         [HttpPost]
         public ActionResult CancelarReserva(int id)
         {

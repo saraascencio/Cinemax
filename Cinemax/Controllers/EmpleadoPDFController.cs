@@ -1,4 +1,5 @@
 ﻿using Cinemax.Models;
+using Cinemax.Servicios;
 using Cinemax.ViewModels;
 using QRCoder;
 using System;
@@ -18,6 +19,8 @@ namespace Cinemax.Controllers
         {
             _dbContext = new CinemaxEntities();
         }
+
+        [Autenticacion]
 
         public ActionResult Detalles(int id)
         {

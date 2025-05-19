@@ -24,7 +24,7 @@
             <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="@Url.Action("Dashboard", "Home")" class="text-nowrap logo-img">
+                    <a href="@Url.Action("Dashboard", "EmpleadoMetricas")" class="text-nowrap logo-img">
                         <img src="~/Content/assets/images/logos/logocine.png" alt="Logo" style="width: 100px; height: auto;">
                     </a>
 
@@ -40,7 +40,7 @@
                             <span class="hide-menu">Home</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Dashboard", "Home")">
+                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Dashboard", "EmpleadoMetricas")">
                                 <iconify-icon icon="ph:ticket-duotone"></iconify-icon>
                                 <span class="hide-menu">Dashboard</span>
                             </a>
@@ -50,7 +50,7 @@
 
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("HistorialReservas", "Home")">
+                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("HistorialReservas", "EmpleadoHistorial")">
                                 <iconify-icon icon="mdi:clipboard-text-clock-outline"></iconify-icon>
                                 <span class="hide-menu">Historial Reservas</span>
                             </a>
@@ -58,12 +58,14 @@
 
 
 
+
                         <li class="sidebar-item">
-                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Login", "Home")">
-                                <iconify-icon icon="solar:login-3-line-duotone"></iconify-icon>
-                                <span class="hide-menu">Login</span>
+                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Crear", "EmpleadoCrear")">
+                                <iconify-icon icon="solar:calendar-add-line-duotone"></iconify-icon>
+                                <span class="hide-menu">Crear Reservas</span>
                             </a>
                         </li>
+
 
 
 
@@ -186,9 +188,7 @@
                                         <div class="qr-container" style="text-align: center; margin: 20px 0;">
                                             <img src="@Model.QRImagen" alt="Código QR de reserva @Model.QRTexto"
                                                  style="width: 150px; height: 150px;" />
-                                            <p style="font-size: 12px; margin-top: 5px;">
-                                                Código: @Model.QRTexto
-                                            </p>
+                                         
                                         </div>
                                     }
                                 </div>
@@ -197,7 +197,9 @@
                                 <div class="mb-4">
                                     <div class="d-flex align-items-center">
                                         <div class="text-secondary me-2">Estado:</div>
-                                        <span class="badge @(Model.Estado == "Pendiente" ? "bg-warning text-dark" : "bg-success") px-3 py-2">
+                                        <span class="badge @(Model.Estado == "Pendiente" ? "bg-warning text-dark" :
+                                        Model.Estado == "Cancelada" ? "bg-danger" :
+                                        "bg-success") px-3 py-2">
                                             @Model.Estado
                                         </span>
                                     </div>

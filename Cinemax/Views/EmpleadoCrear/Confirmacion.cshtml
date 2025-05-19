@@ -1,9 +1,10 @@
-﻿
-@{
-    ViewBag.Title = "HistorialReservas"; //Reservas de empleado
+﻿@{
+    ViewBag.Title = "Confirmacion";
     Layout = null;
 }
-@model IEnumerable<Cinemax.ViewModels.ReservaViewModel>
+@using System.Linq
+@model Cinemax.Models.Reserva
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,7 +118,7 @@
                                     <li class="nav-item dropdown">
                                         <a class="nav-link " href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                            aria-expanded="false">
-                                            <img src="../Content/assets/images/profile/trabajador.png" alt="" width="35" height="35"
+                                            <img src="~/Content/assets/images/profile/trabajador.png" alt="" width="35" height="35"
                                                  class="rounded-circle">
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
@@ -145,95 +146,80 @@
                             </div>
                         </nav>
                     </header>
+                    <div class="container-fluid confirmation-container" style="padding-top: 30px;">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="panel panel-success" style="margin: 0 auto; max-width: 800px;">
+                                    <div class="panel-heading">
+                                        <h2 class="text-center"><i class="fa fa-check-circle"></i> ¡Reserva Confirmada!</h2>
+                                    </div>
+                                    <div class="panel-body" style="padding: 25px;">
 
-                    @using (Html.BeginForm("HistorialReservas", "EmpleadoHistorial", FormMethod.Get))
-                    {
-                        <div class="form-group">
-                            <div class="input-group mb-3">
-                                <input type="text" name="Busqueda" id="inputBusqueda"
-                                       class="form-control"
-                                       placeholder="Buscar por ID o nombre de película..."
-                                       value="@ViewBag.BusquedaActual"
-                                       style="margin-right: 8px;" />
+                                        <!-- Código QR (centrado) -->
+                                        <div class="text-center qr-code" style="margin-bottom: 20px;">
+                                            @if (ViewBag.QRCodeImage != null)
+                                            {
+                                                <img src="@ViewBag.QRCodeImage" alt="Código QR" style="width: 150px; height: 150px;">
+                                            }
+                                        </div>
 
-                                <div class="input-group-append d-flex align-items-center" style="gap: 8px;">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-search"></i> Buscar
-                                    </button>
+                                        <hr style="margin: 20px 0;">
 
-                                    <button type="button" id="btnScanQR" class="btn btn-info" title="Escanear QR">
-                                        <i class="fas fa-qrcode"></i>
-                                    </button>
+                                        <div class="row justify-content-center" style="margin: 0 -10px;">
+                                            <div class="col-md-8" style="padding: 0 15px;">
+                                                <h4 style="text-align: center; margin-bottom: 15px;"><i class="fa fa-film"></i> Detalles de la Función</h4>
+                                                <p style="text-align: center; line-height: 1.8;">
+                                                    <strong>Película:</strong> @Model.Funcion.Pelicula.PEL_Titulo<br>
+                                                    <strong>Fecha:</strong> @Model.Funcion.FUN_Fechahora.ToString("dd/MM/yyyy")<br>
+                                                    <strong>Hora:</strong> @Model.Funcion.FUN_Fechahora.ToString("HH:mm")<br>
+                                                    <strong>Sala:</strong> @Model.Funcion.Sala.SAL_Nombre
+                                                </p>
+                                            </div>
+                                        </div>
 
-                                    @if (!string.IsNullOrEmpty(ViewBag.BusquedaActual))
-                                    {
-                                        <a href="@Url.Action("HistorialReservas")" class="btn btn-secondary">
-                                            <i class="fas fa-times"></i> Limpiar
-                                        </a>
-                                    }
+
+                                        <!-- Asientos -->
+                                        @if (Model.Boleto != null)
+                                        {
+                                            <div class="asientos-section">
+                                                <h4><i class="fa fa-chair"></i> Asientos Reservados</h4>
+                                                <div class="asientos-list">
+                                                    @foreach (var boleto in Model.Boleto)
+                                                    {
+                                                        <span class="asiento-badge">@boleto.Asiento.ASI_Fila@boleto.Asiento.ASI_Numero</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <!-- Pago -->
+                                        @{
+                                            var primerPago = Model.Pago?.AsEnumerable()?.FirstOrDefault();
+                                        }
+
+                                        @if (primerPago != null)
+                                        {
+                                            <div class="pago-info">
+                                                <h4><i class="fa fa-credit-card"></i> Información de Pago</h4>
+                                                <p>
+                                                    <strong>Método:</strong> @(primerPago.MetodoPago?.MET_Nombre ?? "No especificado")<br>
+                                                    <strong>Estado:</strong> @(primerPago.ID_Estadopago == 1 ? "Confirmado" : "Pendiente")
+                                                </p>
+                                            </div>
+                                        }
+
+                                        <div class="text-center action-buttons" style="margin-top:20px;">
+                                            <a href="@Url.Action("HistorialReservas", "EmpleadoHistorial")" class="btn btn-primary">
+                                                <i class="fa fa-home"></i> Volver al Historial
+                                            </a>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    }
-                    <div id="qr-reader" style="width:300px; margin: auto; display:none; margin-bottom: 30px"></div>
+                    </div>
 
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ID Reserva</th>
-                                <th>Función</th>
-                                <th>Película</th>
-                                <th>Precio</th>
-                                <th>Sala</th>
-                                <th>Asientos</th>
-                                <th>QR</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var reserva in Model)
-                            {
-                                <tr>
-                                    <td>@reserva.ID_Reserva</td>
-                                    <td>@reserva.FuncionFecha.ToString("MM/dd/yyyy HH:mm")</td>
-                                    <td>@reserva.PeliculaNombre</td>
-                                    <td>@reserva.Precio.ToString("C")</td>
-                                    <td>@reserva.SalaNombre</td>
-                                    <td>@reserva.Asientos</td>
-                                    <td>@reserva.QR</td>
-                                    <td>@reserva.Estado</td>
-
-                                    <td>
-
-                                        <a href="@Url.Action("Detalles", "EmpleadoPDF", new { id = reserva.ID_Reserva })"
-                                           class="btn btn-sm btn-info" title="Visualizar">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-
-
-                                        <a href="@Url.Action("Editar", "EmpleadoHistorial", new { id = reserva.ID_Reserva })"
-                                           class="btn btn-sm btn-warning" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-
-
-                                        <form method="post" action="@Url.Action("CancelarReserva", "EmpleadoHistorial")" style="display:inline;"
-                                              onsubmit="return confirm('¿Seguro que deseas cancelar esta reserva?');">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@reserva.ID_Reserva" />
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Cancelar">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-
-
-                                    </td>
-                                </tr>
-                            }
-
-                        </tbody>
-                    </table>
 
 
                 </div>
@@ -249,84 +235,41 @@
     <script src="~/Content/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/Content/assets/libs/simplebar/dist/simplebar.js"></script>
     <script src="~/Content/assets/js/dashboard.js"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
     <!-- solar icons -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 </body>
 
 </html>
-
 <style>
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(230, 230, 250, 0.5);
+    .confirmation-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        max-width: 100%;
+        padding: 20px;
     }
 
-    .table-striped tbody tr:nth-of-type(even) {
-        background-color: #e6e6fa;
+    .panel-success {
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        border-radius: 5px;
     }
 
-    .table th {
-        font-weight: bold;
+    .panel-heading {
+        padding: 15px;
+    }
+
+    .asiento-badge {
+        display: inline-block;
+        background: #337ab7;
+        color: white;
+        padding: 5px 10px;
+        margin: 3px;
+        border-radius: 4px;
+    }
+
+    .action-buttons {
+        margin-top: 25px;
+        text-align: center;
     }
 </style>
-
-<script>
-    $(document).ready(function () {
-        
-        var delayTimer;
-        $('#inputBusqueda').on('input', function () {
-            clearTimeout(delayTimer);
-            delayTimer = setTimeout(function () {
-                $('#formBusqueda').submit();
-            }, 500);
-        });
-    });
-
-    const btnScanQR = document.getElementById('btnScanQR');
-    const qrReader = document.getElementById('qr-reader');
-    const inputBusqueda = document.getElementById('inputBusqueda');
-    let html5QrcodeScanner;
-
-    btnScanQR.addEventListener('click', () => {
-        if (qrReader.style.display === 'none') {
-            qrReader.style.display = 'block';
-
-            html5QrcodeScanner = new Html5Qrcode("qr-reader");
-
-            html5QrcodeScanner.start(
-                { facingMode: "environment" }, 
-                {
-                    fps: 10,
-                    qrbox: 250
-                },
-                (decodedText, decodedResult) => {
-                    
-                    inputBusqueda.value = decodedText;
-                    inputBusqueda.form.submit()
-                    html5QrcodeScanner.stop().then(() => {
-                        qrReader.style.display = 'none';
-                    }).catch(err => {
-                        console.error("Error parando cámara:", err);
-                    });
-                },
-                (errorMessage) => {
-                 
-                }
-            ).catch(err => {
-                console.error("Error iniciando cámara:", err);
-            });
-        } else {
-          
-            html5QrcodeScanner.stop().then(() => {
-                qrReader.style.display = 'none';
-            }).catch(err => {
-                console.error("Error parando cámara:", err);
-            });
-        }
-    }); 
-</script>
-
-
-
-
