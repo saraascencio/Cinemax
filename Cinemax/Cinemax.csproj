@@ -329,6 +329,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\AutenticationAttribute.cs" />
+    <Compile Include="ViewModels\CarteleraViewModel.cs" />
     <Compile Include="ViewModels\EditarReservaViewModel.cs" />
     <Compile Include="ViewModels\ReservaViewModel.cs" />
   </ItemGroup>
