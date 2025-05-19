@@ -1,0 +1,41 @@
+﻿@model Cinemax.Models.Funcion
+
+@{
+    ViewBag.Title = "Detalles de la Función";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Imagen -->
+        <div class="col-md-5">
+            <img src="@Model.Pelicula.PEL_ImagenURL" class="img-fluid rounded shadow" alt="Portada de @Model.Pelicula.PEL_Titulo" />
+        </div>
+
+        <!-- Info -->
+        <div class="col-md-7">
+            <h2>@Model.Pelicula.PEL_Titulo</h2>
+
+            <span class="badge bg-success mb-2">Precio</span>
+            <h3 class="fw-bold">$@Model.FUN_Precio.ToString("F2") por persona</h3>
+
+            <p><strong>Fecha y hora:</strong> @Model.FUN_Fechahora.ToString("dddd dd MMMM yyyy, hh:mm tt")</p>
+            <p><strong>Sala:</strong> @Model.Sala.SAL_Nombre</p>
+
+            <form action="/Asientos/Seleccionar" method="get">
+                <input type="hidden" name="idFuncion" value="@Model.ID_Funcion" />
+
+                <div class="mb-3">
+                    <label for="asientos" class="form-label">Tus asientos</label>
+                    <input type="text" name="asientos" id="asientos" class="form-control" placeholder="Ej: A1,A2,A3" />
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-purple w-100">Siguiente</button>
+            </form>
+
+            <div class="alert alert-light mt-3" role="alert">
+                <strong>Tomar en cuenta:</strong> Si su pago es exitoso, recibirá un PDF de confirmación y código QR para ingresar a la sala.
+            </div>
+        </div>
+    </div>
+</div>

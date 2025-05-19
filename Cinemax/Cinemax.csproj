@@ -256,6 +256,7 @@
     <Compile Include="Controllers\EmpleadoHistorialController.cs" />
     <Compile Include="Controllers\EmpleadoMetricasController.cs" />
     <Compile Include="Controllers\EmpleadoPDFController.cs" />
+    <Compile Include="Controllers\FuncionesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -401,6 +402,7 @@
     <Content Include="Views\EmpleadoMetricas\DashboardImpresion.cshtml" />
     <Content Include="Views\Cartelera\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutCliente.cshtml" />
+    <Content Include="Views\Funciones\Detalles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
