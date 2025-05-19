@@ -65,27 +65,58 @@
     </div>
 
     <!-- Paginación real -->
-    <div class="d-flex justify-content-center mt-4">
+    <div class="d-flex justify-content-center mt-3">
         <nav aria-label="Page navigation">
-            <ul class="pagination pagination-rounded">
+            <ul class="pagination pagination-lg gap-2 flex-wrap justify-content-center">
                 @if (Model.PaginaActual > 1)
                 {
                     <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", new { pagina = Model.PaginaActual - 1, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">←</a>
+                        <a class="page-link px-3" href="@Url.Action("Index", new { pagina = 1, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">Primera</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link px-3" href="@Url.Action("Index", new { pagina = Model.PaginaActual - 1, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">
+                            <iconify-icon icon="mdi:chevron-left"></iconify-icon>
+                        </a>
                     </li>
                 }
 
-                @for (int i = 1; i <= Model.TotalPaginas; i++)
-                {
-                    <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
-                        <a class="page-link" href="@Url.Action("Index", new { pagina = i, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">@i</a>
-                    </li>
+                @{
+                    int totalPaginas = Model.TotalPaginas;
+                    int paginaActual = Model.PaginaActual;
+                    int rango = 2;
+                    int desde = Math.Max(1, paginaActual - rango);
+                    int hasta = Math.Min(totalPaginas, paginaActual + rango);
+
+                    if (desde > 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+
+                    for (int i = desde; i <= hasta; i++)
+                    {
+                        <li class="page-item @(i == paginaActual ? "active" : "")">
+                            <a class="page-link px-3 @(i == paginaActual ? "bg-primary text-white border-0" : "")"
+                               href="@Url.Action("Index", new { pagina = i, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    if (hasta < totalPaginas)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
                 }
 
                 @if (Model.PaginaActual < Model.TotalPaginas)
                 {
                     <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", new { pagina = Model.PaginaActual + 1, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">→</a>
+                        <a class="page-link px-3" href="@Url.Action("Index", new { pagina = Model.PaginaActual + 1, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">
+                            <iconify-icon icon="mdi:chevron-right"></iconify-icon>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link px-3" href="@Url.Action("Index", new { pagina = Model.TotalPaginas, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">Última</a>
                     </li>
                 }
             </ul>
