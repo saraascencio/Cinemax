@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -252,6 +252,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\EmpleadoCrearController.cs" />
+    <Compile Include="Controllers\CarteleraController.cs" />
     <Compile Include="Controllers\EmpleadoHistorialController.cs" />
     <Compile Include="Controllers\EmpleadoMetricasController.cs" />
     <Compile Include="Controllers\EmpleadoPDFController.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\AutenticationAttribute.cs" />
     <Compile Include="ViewModels\CrearReservaEViewModel.cs" />
+    <Compile Include="ViewModels\CarteleraViewModel.cs" />
     <Compile Include="ViewModels\EditarReservaViewModel.cs" />
     <Compile Include="ViewModels\ReservaViewModel.cs" />
   </ItemGroup>
@@ -397,6 +399,8 @@
     <Content Include="Views\EmpleadoCrear\Confirmacion.cshtml" />
     <Content Include="Views\EmpleadoMetricas\Dashboard.cshtml" />
     <Content Include="Views\EmpleadoMetricas\DashboardImpresion.cshtml" />
+    <Content Include="Views\Cartelera\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutCliente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

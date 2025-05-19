@@ -1,0 +1,125 @@
+﻿@model Cinemax.ViewModels.CarteleraViewModel
+
+@{
+    ViewBag.Title = "Cartelera";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    var fechaSeleccionada = ViewBag.FechaSeleccionada as DateTime?;
+    var generoSeleccionado = ViewBag.GeneroSeleccionado as string;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <h2 class="fw-bold d-flex align-items-center mb-2 mb-md-0">
+            <i class="bi bi-film fs-4 me-2 text-primary"></i>
+            🎬 Cartelera de películas - @(fechaSeleccionada?.ToString("dd/MM/yyyy") ?? "Fecha no disponible")
+        </h2>
+    </div>
+
+    <!-- Filtros: Géneros + Fecha -->
+    <form method="get" class="mb-4">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <a href="@Url.Action("Index", "Cartelera", new { genero = "", fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })"
+               class="btn rounded-pill @(string.IsNullOrEmpty(generoSeleccionado) ? "btn-primary text-white" : "btn-outline-secondary")">Todos</a>
+
+            @foreach (var g in ViewBag.Generos as List<string>)
+            {
+                <a href="@Url.Action("Index", "Cartelera", new { genero = g, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })"
+                   class="btn rounded-pill @(generoSeleccionado == g ? "btn-primary text-white" : "btn-outline-secondary")">@g</a>
+            }
+
+            <div class="position-relative" style="width: 44px; height: 44px;">
+                <!-- Input invisible pero funcional encima del botón -->
+                <input type="date"
+                       id="fechaSelector"
+                       name="fecha"
+                       value="@fechaSeleccionada?.ToString(" yyyy-MM-dd")"
+                       onchange="this.form.submit()"
+                       class="position-absolute top-0 start-0 w-100 h-100"
+                       style="opacity: 0; z-index: 2; cursor: pointer;" />
+
+                <!-- Ícono visible debajo -->
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                     style="background-color: #bb52f5; border-radius: 12px; z-index: 1;">
+                    <iconify-icon icon="mdi:calendar-month" width="24" height="24" style="color: white;"></iconify-icon>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- Tarjetas de películas -->
+    <div class="row">
+        @foreach (var p in Model.Peliculas)
+        {
+            <div class="col-md-4 mb-4 d-flex align-items-stretch">
+                <div class="card shadow-sm rounded w-100">
+                    <img src="@p.PEL_ImagenURL" class="card-img-top" style="height:250px; object-fit:cover;" alt="@p.PEL_Titulo" />
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-semibold">@p.PEL_Titulo</h5>
+                        <p class="card-text text-muted small flex-grow-1">@p.PEL_Sinopsis</p>
+                        <p class="card-text mt-2"><strong>Duración:</strong> @($"{p.PEL_Duracion.Hours}h {p.PEL_Duracion.Minutes}min")</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Paginación real -->
+    <div class="d-flex justify-content-center mt-3">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-lg gap-2 flex-wrap justify-content-center">
+                @if (Model.PaginaActual > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link px-3" href="@Url.Action("Index", new { pagina = 1, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">Primera</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link px-3" href="@Url.Action("Index", new { pagina = Model.PaginaActual - 1, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">
+                            <iconify-icon icon="mdi:chevron-left"></iconify-icon>
+                        </a>
+                    </li>
+                }
+
+                @{
+                    int totalPaginas = Model.TotalPaginas;
+                    int paginaActual = Model.PaginaActual;
+                    int rango = 2;
+                    int desde = Math.Max(1, paginaActual - rango);
+                    int hasta = Math.Min(totalPaginas, paginaActual + rango);
+
+                    if (desde > 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+
+                    for (int i = desde; i <= hasta; i++)
+                    {
+                        <li class="page-item @(i == paginaActual ? "active" : "")">
+                            <a class="page-link px-3 @(i == paginaActual ? "bg-primary text-white border-0" : "")"
+                               href="@Url.Action("Index", new { pagina = i, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    if (hasta < totalPaginas)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+                }
+
+                @if (Model.PaginaActual < Model.TotalPaginas)
+                {
+                    <li class="page-item">
+                        <a class="page-link px-3" href="@Url.Action("Index", new { pagina = Model.PaginaActual + 1, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">
+                            <iconify-icon icon="mdi:chevron-right"></iconify-icon>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link px-3" href="@Url.Action("Index", new { pagina = Model.TotalPaginas, genero = generoSeleccionado, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })">Última</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
