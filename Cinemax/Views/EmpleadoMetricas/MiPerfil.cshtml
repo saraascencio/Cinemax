@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Mi Perfil";
+    Layout = "~/Views/Shared/_LayoutEmpleado.cshtml";
+}
+
+@section styles {
+    <style>
+        .tarjeta-bienvenida {
+            background: white;
+            border: 1px solid #eaeaea;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            color: #333; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+            margin: 0 0 20px 0; 
+        }
+
+        .titulo-bienvenida {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #222; 
+        }
+
+        .subtitulo-bienvenida {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #555; 
+        }
+
+        .logo-cine {
+            width: 150px;
+            height: auto;
+            margin: 20px 0;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); 
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .container-fluid {
+            padding: 20px;
+        }
+    </style>
+}
+
+<div class="container-fluid" style="margin-top:-25px">
+    <div class="row">
+        <div class="col-12">
+            <div class="tarjeta-bienvenida">
+                <h1 class="titulo-bienvenida">¡Hola @ViewBag.NombreEmpleado!</h1>
+
+                <div class="subtitulo-bienvenida">
+                    Bienvenido/a al sistema interno de Cinemax. Tu trabajo es<br>
+                    clave para llevar la magia del cine a nuestros clientes.<br>
+                    ¡Gracias por ser parte de esta gran experiencia!
+                </div>
+
+                <div>
+                    <img src="~/Content/assets/images/logos/logocine.png" alt="Logo Cinemax" class="logo-cine">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

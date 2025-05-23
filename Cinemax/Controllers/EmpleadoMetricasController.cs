@@ -148,7 +148,7 @@ namespace Cinemax.Controllers
             {
                 PageSize = Rotativa.Options.Size.A4,
                 PageOrientation = Rotativa.Options.Orientation.Portrait,
-                CustomSwitches = "--print-media-type --header-center \"Reporte de Dashboard\" --footer-center \"Página [page] de [toPage]\" --footer-font-size 8"
+                CustomSwitches = "--print-media-type --header-center \"Reporte de Reservas\" --footer-center \"Página [page] de [toPage]\" --footer-font-size 8"
             };
         }
 
@@ -160,5 +160,19 @@ namespace Cinemax.Controllers
             return View();
         }
 
+        [Autenticacion]
+        public ActionResult MiPerfil()
+        {
+            
+            if (Session["TipoUsuario"] as string != "Empleado")
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+          
+            ViewBag.NombreEmpleado = Session["Nombre"] as string ?? "Empleado";
+
+            return View();
+        }
     }
 }
