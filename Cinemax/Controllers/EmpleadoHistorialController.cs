@@ -21,9 +21,11 @@ namespace Cinemax.Controllers
         }
 
         [Autenticacion]
-        public ActionResult HistorialReservas(string Busqueda)
+        public ActionResult HistorialReservas(string Busqueda, int pagina = 1)
         {
-            // Consulta base sin filtro
+            int reservasPorPagina = 25;
+
+          
             var query = from r in _dbContext.Reserva
                         join f in _dbContext.Funcion on r.ID_Funcion equals f.ID_Funcion
                         join p in _dbContext.Pelicula on f.ID_Pelicula equals p.ID_Pelicula
@@ -37,19 +39,14 @@ namespace Cinemax.Controllers
 
             if (!string.IsNullOrEmpty(Busqueda))
             {
-               
                 if (int.TryParse(Busqueda, out int idBuscado))
                 {
-                    
                     query = query.Where(x => x.r.ID_Reserva == idBuscado);
                 }
                 else
                 {
-                    
                     query = query.Where(x => x.p.PEL_Titulo.Contains(Busqueda) || x.r.RES_QR.Contains(Busqueda));
                 }
-
-
             }
 
             var datosReservas = query
@@ -71,7 +68,7 @@ namespace Cinemax.Controllers
                 })
                 .AsEnumerable();
 
-            var listadoFinal = datosReservas.Select(x => new ReservaViewModel
+            var todasLasReservas = datosReservas.Select(x => new ReservaViewModel
             {
                 ID_Reserva = x.ID_Reserva,
                 FuncionFecha = x.FuncionFecha,
@@ -83,12 +80,34 @@ namespace Cinemax.Controllers
                 Estado = x.Estado
             }).ToList();
 
+         
+            int totalReservas = todasLasReservas.Count();
+            int totalPaginas = (int)Math.Ceiling((double)totalReservas / reservasPorPagina);
+
+           
+            if (pagina < 1) pagina = 1;
+            if (pagina > totalPaginas && totalPaginas > 0) pagina = totalPaginas;
+
+        
+            var reservasPaginadas = todasLasReservas
+                .Skip((pagina - 1) * reservasPorPagina)
+                .Take(reservasPorPagina)
+                .ToList();
+
             
             ViewBag.BusquedaActual = Busqueda;
+            ViewBag.PaginaActual = pagina;
+            ViewBag.TotalPaginas = totalPaginas;
+            ViewBag.TotalReservas = totalReservas;
+            ViewBag.ReservasPorPagina = reservasPorPagina;
 
-            return View(listadoFinal);
+            return View(reservasPaginadas);
         }
 
+
+
+
+        [Autenticacion]
         public ActionResult Editar(int id, int? idPeliculaSeleccionada, int? idFuncionSeleccionada,
             string asientosSeleccionados = null)
         {
@@ -198,6 +217,8 @@ namespace Cinemax.Controllers
             return View(model);
         }
 
+
+        [Autenticacion]
         [HttpPost]
 
         public ActionResult Editar(EditarReservaViewModel model, string action)
@@ -388,7 +409,7 @@ namespace Cinemax.Controllers
         }
 
 
-       
+        [Autenticacion]
         [HttpPost]
         public ActionResult CancelarReserva(int id)
         {

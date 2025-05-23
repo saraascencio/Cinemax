@@ -1,248 +1,96 @@
 ﻿@{
     ViewBag.Title = "Detalles";
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutEmpleado.cshtml";
 }
 @model Cinemax.ViewModels.ReservaViewModel
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@ViewBag.Title</title>
-    <link rel="shortcut icon" type="image/png" href="~/Content/assets/images/logos/logocine.png" />
-    <link rel="stylesheet" href="~/Content/assets/css/styles.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-</head>
-<body>
-    <!-- Body Wrapper -->
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-         data-sidebar-position="fixed" data-header-position="fixed">
 
-        <!-- Acá había una barra superior pero eran promociones de comprar plantillas -->
-        <!-- Sidebar Start -->
-        <aside class="left-sidebar">
-            <!-- Sidebar scroll-->
-            <div>
-                <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="@Url.Action("Dashboard", "EmpleadoMetricas")" class="text-nowrap logo-img">
-                        <img src="~/Content/assets/images/logos/logocine.png" alt="Logo" style="width: 100px; height: auto;">
-                    </a>
+<div class="container py-4">
+    <div>
+        <div class="card border-0 shadow-lg" style="max-width: 500px; margin: 0 auto;">
 
-                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-                        <i class="ti ti-x fs-8"></i>
+            <div class="card-header py-3" style="background-color: #D8BFD8; color: white;">
+                <h4 class="mb-0 fw-normal">Detalles de la reserva #@Model.ID_Reserva</h4>
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="mb-4">
+                    <div class="text-primary fs-5 mb-1">@Model.PeliculaNombre</div>
+                    <div class="text-muted">Película</div>
+                </div>
+
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="border-bottom pb-2">
+                            <div class="text-secondary mb-1">Función</div>
+                            <div>@Model.FuncionFecha.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="border-bottom pb-2">
+                            <div class="text-secondary mb-1">Precio</div>
+                            <div>$@Model.Precio.ToString("0.00")</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="border-bottom pb-2">
+                            <div class="text-secondary mb-1">Sala</div>
+                            <div>@Model.SalaNombre</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="border-bottom pb-2">
+                            <div class="text-secondary mb-1">Asientos</div>
+                            <div>@Model.Asientos</div>
+                        </div>
                     </div>
                 </div>
-                <!-- Sidebar navigation-->
-                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-                    <ul id="sidebarnav">
-                        <li class="nav-small-cap">
-                            <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4"></iconify-icon>
-                            <span class="hide-menu">Home</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Dashboard", "EmpleadoMetricas")">
-                                <iconify-icon icon="ph:ticket-duotone"></iconify-icon>
-                                <span class="hide-menu">Dashboard</span>
-                            </a>
-
-                        </li>
 
 
+                <div class="mb-4 p-3 bg-light rounded">
+                    @if (!string.IsNullOrEmpty(Model.QRImagen))
+                    {
+                        <div class="qr-container" style="text-align: center; margin: 20px 0;">
+                            <img src="@Model.QRImagen" alt="Código QR de reserva @Model.QRTexto"
+                                 style="width: 150px; height: 150px;" />
 
-                        <li class="sidebar-item">
-                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("HistorialReservas", "EmpleadoHistorial")">
-                                <iconify-icon icon="mdi:clipboard-text-clock-outline"></iconify-icon>
-                                <span class="hide-menu">Historial Reservas</span>
-                            </a>
-                        </li>
-
-
-
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Crear", "EmpleadoCrear")">
-                                <iconify-icon icon="solar:calendar-add-line-duotone"></iconify-icon>
-                                <span class="hide-menu">Crear Reservas</span>
-                            </a>
-                        </li>
+                        </div>
+                    }
+                </div>
 
 
-
-
-
-
-                    </ul>
-
-                </nav>
-                <!-- End Sidebar navigation -->
-            </div>
-            <!-- End Sidebar scroll-->
-        </aside>
-        <!--  Sidebar End -->
-        <!--  Main wrapper -->
-        <div class="body-wrapper">
-
-            <div class="body-wrapper-inner">
-                <div class="container-fluid">
-                    <!--  Header Start -->
-                    <header class="app-header">
-                        <nav class="navbar navbar-expand-lg navbar-light">
-                            <ul class="navbar-nav">
-                                <li class="nav-item d-block d-xl-none">
-                                    <a class="nav-link sidebartoggler " id="headerCollapse" href="javascript:void(0)">
-                                        <i class="ti ti-menu-2"></i>
-                                    </a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link " href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown"
-                                       aria-expanded="false">
-                                        <iconify-icon icon="solar:bell-linear" class="fs-6"></iconify-icon>
-                                        <div class="notification bg-primary rounded-circle"></div>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-animate-up" aria-labelledby="drop1">
-                                        <div class="message-body">
-                                            <a href="javascript:void(0)" class="dropdown-item">
-                                                Item 1
-                                            </a>
-                                            <a href="javascript:void(0)" class="dropdown-item">
-                                                Item 2
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-                                <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link " href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
-                                           aria-expanded="false">
-                                            <img src="~/Content/assets/images/profile/trabajador.png" alt="" width="35" height="35"
-                                                 class="rounded-circle">
-
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                                            <div class="message-body">
-                                                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                                    <i class="ti ti-user fs-6"></i>
-                                                    <p class="mb-0 fs-3">Mi Perfil</p>
-                                                </a>
-
-                                                <form method="post" action="@Url.Action("Logout", "Home")">
-                                                    <button type="submit" class="btn btn-outline-primary mx-3 mt-2 d-block">Cerrar sesión</button>
-                                                </form>
-
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </nav>
-                    </header>
-
-                    <div class="container py-4">
-                        <div class="card border-0 shadow-lg" style="max-width: 500px; margin: 0 auto;">
-
-                            <div class="card-header py-3" style="background-color: #D8BFD8; color: white;">
-                                <h4 class="mb-0 fw-normal">Detalles de la reserva #@Model.ID_Reserva</h4>
-                            </div>
-
-                            <div class="card-body p-4">
-
-                                <div class="mb-4">
-                                    <div class="text-primary fs-5 mb-1">@Model.PeliculaNombre</div>
-                                    <div class="text-muted">Película</div>
-                                </div>
-
-
-                                <div class="row g-3 mb-4">
-                                    <div class="col-6">
-                                        <div class="border-bottom pb-2">
-                                            <div class="text-secondary mb-1">Función</div>
-                                            <div>@Model.FuncionFecha.ToString("dd/MM/yyyy HH:mm")</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="border-bottom pb-2">
-                                            <div class="text-secondary mb-1">Precio</div>
-                                            <div>$@Model.Precio.ToString("0.00")</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="border-bottom pb-2">
-                                            <div class="text-secondary mb-1">Sala</div>
-                                            <div>@Model.SalaNombre</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="border-bottom pb-2">
-                                            <div class="text-secondary mb-1">Asientos</div>
-                                            <div>@Model.Asientos</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="mb-4 p-3 bg-light rounded">
-                                    @if (!string.IsNullOrEmpty(Model.QRImagen))
-                                    {
-                                        <div class="qr-container" style="text-align: center; margin: 20px 0;">
-                                            <img src="@Model.QRImagen" alt="Código QR de reserva @Model.QRTexto"
-                                                 style="width: 150px; height: 150px;" />
-                                         
-                                        </div>
-                                    }
-                                </div>
-
-
-                                <div class="mb-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="text-secondary me-2">Estado:</div>
-                                        <span class="badge @(Model.Estado == "Pendiente" ? "bg-warning text-dark" :
+                <div class="mb-4">
+                    <div class="d-flex align-items-center">
+                        <div class="text-secondary me-2">Estado:</div>
+                        <span class="badge @(Model.Estado == "Pendiente" ? "bg-warning text-dark" :
                                         Model.Estado == "Cancelada" ? "bg-danger" :
                                         "bg-success") px-3 py-2">
-                                            @Model.Estado
-                                        </span>
-                                    </div>
-                                </div>
-
-
-                                <div class="d-flex justify-content-between pt-3 border-top">
-
-                                    <a href="@Url.Action("Editar", "EmpleadoHistorial", new { id = Model.ID_Reserva })" class="btn btn-outline-primary px-4">
-                                        <i class="fas fa-edit me-2"></i>Editar
-                                    </a>
-
-                                    <!-- Botón para descargar PDF -->
-                                    <a href="@Url.Action("DetallesPDF", "EmpleadoPDF",new { id = Model.ID_Reserva })" class="btn btn-outline-success px-4" target="_blank">
-                                        <i class="fas fa-file-pdf me-2"></i>Ticket PDF
-                                    </a>
-
-                                    <a href="@Url.Action("HistorialReservas", "EmpleadoHistorial")" class="btn btn-secondary px-4">
-                                        <i class="fas fa-times me-2"></i>Cerrar
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
+                            @Model.Estado
+                        </span>
                     </div>
+                </div>
 
+
+                <div class="d-flex justify-content-between pt-3 border-top">
+
+                    <a href="@Url.Action("Editar", "EmpleadoHistorial", new { id = Model.ID_Reserva })" class="btn btn-outline-primary px-4">
+                        <i class="fas fa-edit me-2"></i>Editar
+                    </a>
+
+                    <!-- Botón para descargar PDF -->
+                    <a href="@Url.Action("DetallesPDF", "EmpleadoPDF",new { id = Model.ID_Reserva })" class="btn btn-outline-success px-4" target="_blank">
+                        <i class="fas fa-file-pdf me-2"></i>Ticket PDF
+                    </a>
+
+                    <a href="@Url.Action("HistorialReservas", "EmpleadoHistorial")" class="btn btn-secondary px-4">
+                        <i class="fas fa-times me-2"></i>Cerrar
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <script src="~/Content/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="~/Content/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/Content/assets/js/sidebarmenu.js"></script>
-    <script src="~/Content/assets/js/app.min.js"></script>
-    <script src="~/Content/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-    <script src="~/Content/assets/libs/simplebar/dist/simplebar.js"></script>
-    <script src="~/Content/assets/js/dashboard.js"></script>
-    <!-- solar icons -->
-    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
-</body>
+</div>
 
-</html>
+
 
