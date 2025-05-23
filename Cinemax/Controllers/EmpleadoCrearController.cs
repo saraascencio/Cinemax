@@ -170,16 +170,11 @@ namespace Cinemax.Controllers
         }
 
         [Autenticacion]
-
         [HttpPost]
+
         public JsonResult ObtenerAsientosDisponibles(int funcionId)
         {
-            var asientosOcupados = _dbContext.FuncionAsiento
-                .Where(fa => fa.ID_Funcion == funcionId &&
-                       fa.ID_EstadoAsiento == 2) 
-                .Select(fa => fa.Asiento)
-                .ToList();
-
+          
             var salaId = _dbContext.Funcion.Find(funcionId).ID_Sala;
             var todosAsientos = _dbContext.Asiento
                 .Where(a => a.ID_Sala == salaId)
@@ -187,18 +182,23 @@ namespace Cinemax.Controllers
                 .ThenBy(a => a.ASI_Numero)
                 .ToList();
 
-            var asientosDisponibles = todosAsientos
-                .Where(a => !asientosOcupados.Any(ao => ao.ID_Asiento == a.ID_Asiento))
-                .Select(a => new
-                {
-                    Id = a.ID_Asiento,
-                    Nombre = $"{a.ASI_Fila}{a.ASI_Numero}",
-                    Fila = a.ASI_Fila,
-                    Numero = a.ASI_Numero
-                })
+           
+            var asientosOcupadosIds = _dbContext.FuncionAsiento
+                .Where(fa => fa.ID_Funcion == funcionId && fa.ID_EstadoAsiento == 2)
+                .Select(fa => fa.ID_Asiento)
                 .ToList();
 
-            return Json(asientosDisponibles);
+          
+            var asientosConEstado = todosAsientos.Select(a => new
+            {
+                Id = a.ID_Asiento,
+                Nombre = $"{a.ASI_Fila}{a.ASI_Numero}",
+                Fila = a.ASI_Fila,
+                Numero = a.ASI_Numero,
+                Estado = asientosOcupadosIds.Contains(a.ID_Asiento) ? "ocupado" : "disponible"
+            }).ToList();
+
+            return Json(asientosConEstado);
         }
 
         [Autenticacion]
@@ -245,11 +245,11 @@ namespace Cinemax.Controllers
 
                         _dbContext.Reserva.Add(reserva);
                         _dbContext.SaveChanges();
-                        
+
                         reserva.RES_QR = $"QR{reserva.ID_Reserva}{DateTime.Now:MMdd}";
                         _dbContext.SaveChanges();
 
-                       
+
                         if (!string.IsNullOrEmpty(model.AsientosSeleccionados))
                         {
                             var asientos = model.AsientosSeleccionados.Split(',')
@@ -265,7 +265,7 @@ namespace Cinemax.Controllers
                                 var asiento = _dbContext.Asiento.FirstOrDefault(a =>
                                     a.ASI_Fila == fila &&
                                     a.ASI_Numero == numero &&
-                                    a.ID_Sala == funcion.ID_Sala); 
+                                    a.ID_Sala == funcion.ID_Sala);
 
                                 if (asiento != null)
                                 {
@@ -296,7 +296,7 @@ namespace Cinemax.Controllers
                             }
                         }
 
-                     
+
                         _dbContext.Pago.Add(new Pago
                         {
                             ID_Reserva = reserva.ID_Reserva,
@@ -314,7 +314,7 @@ namespace Cinemax.Controllers
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("", $"Error al procesar la reserva: {ex.Message}");
-                   
+
                     }
                 }
             }

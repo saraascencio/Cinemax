@@ -3,270 +3,461 @@
     Layout = "~/Views/Shared/_LayoutEmpleado.cshtml";
 }
 @model Cinemax.ViewModels.CrearReservaEViewModel
+@section styles{
+    <style>
+
+        .cinema-layout {
+            text-align: center;
+            background: #f2f7fb;
+            padding: 30px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .screen {
+            background: #f8f9fa;
+            color: #333;
+            padding: 8px 20px;
+            margin: 0 auto 30px;
+            border-radius: 20px 20px 5px 5px;
+            font-weight: bold;
+            font-size: 14px;
+            max-width: 200px;
+            border: 2px solid #ddd;
+        }
+
+        .seats-grid {
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .row-label {
+            color: #333;
+            font-weight: bold;
+            width: 30px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .seat {
+            width: 28px;
+            height: 28px;
+            margin: 2px;
+            border: none;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+            .seat.available {
+                background-color: #dc3545;
+                color: white;
+            }
+
+                .seat.available:hover {
+                    background-color: #c82333;
+                    transform: scale(1.1);
+                }
+
+            .seat.selected {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .seat.occupied {
+                background-color: #6c757d;
+                color: #adb5bd;
+                cursor: not-allowed;
+            }
+
+        /* Leyenda */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+            font-size: 12px;
+        }
+
+        .legend-seat {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px 4px 0 0;
+        }
+
+            .legend-seat.available {
+                background-color: #dc3545;
+            }
+
+            .legend-seat.selected {
+                background-color: #28a745;
+            }
+
+            .legend-seat.occupied {
+                background-color: #6c757d;
+            }
+
+ 
+        .selection-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .selection-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .selected-seats {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .total-price {
+            color: #007bff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-info {
+            color: #31708f;
+            background-color: #d9edf7;
+            border-color: #bce8f1;
+        }
 
 
+        .seat {
+            width: 24px;
+            height: 24px;
+            font-size: 8px;
+        }
 
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
+        .legend {
+            gap: 10px;
+        }
 
-            <div class="form-horizontal">
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        .selection-summary {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    </style>
+}
 
-                <!-- Sección de Cliente -->
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" style="font-size: 14px">Información del Cliente</h3>
+    @using (Html.BeginForm())
+    {
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <!-- Sección de Cliente -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 14px">Información del Cliente</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EmailCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.EmailCliente, new { htmlAttributes = new { @class = "form-control", id = "emailCliente" } })
+                        @Html.ValidationMessageFor(model => model.EmailCliente, "", new { @class = "text-danger" })
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.EmailCliente, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.EditorFor(model => model.EmailCliente, new { htmlAttributes = new { @class = "form-control", id = "emailCliente" } })
-                                @Html.ValidationMessageFor(model => model.EmailCliente, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-2" style="display: flex; gap: 5px; align-items: center; margin-top:15px; margin-bottom:15px;">
-                                <button type="button" class="btn btn-info" id="btnBuscarCliente" style="padding: 3px 8px; font-size: 14px; white-space: nowrap;">Buscar Cliente</button>
-                                <button type="button" class="btn btn-primary" id="btnClienteNuevo" style="padding: 3px 8px; font-size: 14px; white-space: nowrap; background-color: #800080; border-color: #800080;">¿Cliente nuevo?</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.NombreCliente, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.NombreCliente, new { htmlAttributes = new { @class = "form-control", id = "nombreCliente", disabled = "disabled" } })
-                                @Html.ValidationMessageFor(model => model.NombreCliente, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.EmailCliente2, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.EmailCliente2, new { htmlAttributes = new { @class = "form-control", id = "emailCliente2", disabled = "disabled" } })
-                                @Html.ValidationMessageFor(model => model.EmailCliente2, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.TelefonoCliente, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.TelefonoCliente, new { htmlAttributes = new { @class = "form-control", id = "telefonoCliente", disabled = "disabled" } })
-                                @Html.ValidationMessageFor(model => model.TelefonoCliente, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        @Html.HiddenFor(model => model.UsuarioId, new { id = "usuarioId" })
+                    <div class="col-md-2" style="display: flex; gap: 5px; align-items: center; margin-top:15px; margin-bottom:15px;">
+                        <button type="button" class="btn btn-info" id="btnBuscarCliente" style="padding: 3px 8px; font-size: 14px; white-space: nowrap;">Buscar Cliente</button>
+                        <button type="button" class="btn btn-primary" id="btnClienteNuevo" style="padding: 3px 8px; font-size: 14px; white-space: nowrap; background-color: #800080; border-color: #800080;">¿Cliente nuevo?</button>
                     </div>
                 </div>
 
-                <!-- Sección de Película y Función -->
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" style="font-size: 14px;">Selección de Película y Función</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.PeliculaId, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.DropDownListFor(model => model.PeliculaId, Model.Peliculas, "-- Seleccione una película --", new { @class = "form-control", id = "peliculaId" })
-                                @Html.ValidationMessageFor(model => model.PeliculaId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.FechaSeleccionada, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <input type="text" id="fechaSeleccionada" name="FechaSeleccionada" class="form-control" disabled />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.FuncionId, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <select id="funcionId" name="FuncionId" class="form-control" disabled>
-                                    <option value="">-- Seleccione una hora --</option>
-                                </select>
-                                @Html.ValidationMessageFor(model => model.FuncionId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", id = "precio" } })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.NombreSala, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.NombreSala, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", id = "nombreSala" } })
-                            </div>
-                        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NombreCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.NombreCliente, new { htmlAttributes = new { @class = "form-control", id = "nombreCliente", disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.NombreCliente, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                <!-- Sección de Asientos -->
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" style="font-size: 14px; margin-top: 15px">Selección de Asientos</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label class="control-label col-md-2">Asientos Disponibles</label>
-                            <div class="col-md-10">
-                                <select id="asientosDisponibles" class="form-control" size="5" multiple disabled>
-                                    <option>Seleccione una función primero</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-top: 15px;">
-                            <div class="col-md-offset-2 col-md-10">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-success" id="btnAgregarAsiento" style="font-size: 14px;">Agregar Asiento</button>
-                                    <button type="button" class="btn btn-danger" id="btnQuitarAsiento" style="font-size: 14px;">Quitar Asiento</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-top: 15px;">
-                            <label class="control-label col-md-2">Asientos Seleccionados</label>
-                            <div class="col-md-10">
-                                <select id="asientosSeleccionadosLista" class="form-control" size="5" multiple>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-top: 15px;">
-                            @Html.LabelFor(model => model.AsientosSeleccionados, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.TextAreaFor(model => model.AsientosSeleccionados, new { @class = "form-control", @readonly = "readonly", rows = "2", id = "asientosSeleccionados" })
-                                @Html.ValidationMessageFor(model => model.AsientosSeleccionados, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EmailCliente2, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.EmailCliente2, new { htmlAttributes = new { @class = "form-control", id = "emailCliente2", disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.EmailCliente2, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                <!-- Sección de Método de Pago -->
-                <div class="panel panel-primary" style="margin-top: 15px;">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" style="font-size: 14px; margin-top: 15px">Método de Pago</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-10">
-                                @Html.DropDownListFor(model => model.MetodoPagoId, Model.MetodosPago, "-- Seleccione un método de pago --", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.MetodoPagoId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TelefonoCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.TelefonoCliente, new { htmlAttributes = new { @class = "form-control", id = "telefonoCliente", disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.TelefonoCliente, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-top: 15px">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Guardar Reserva" class="btn btn-primary btn-lg" style="font-size: 14px;" />
-                        @Html.ActionLink("Cerrar", "HistorialReservas", "EmpleadoHistorial", new { @class = "btn btn-default btn-cancel", style = "font-size: 14px;" })
+                @Html.HiddenFor(model => model.UsuarioId, new { id = "usuarioId" })
+            </div>
+        </div>
+
+        <!-- Sección de Película y Función -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 14px;">Selección de Película y Función</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PeliculaId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.PeliculaId, Model.Peliculas, "-- Seleccione una película --", new { @class = "form-control", id = "peliculaId" })
+                        @Html.ValidationMessageFor(model => model.PeliculaId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaSeleccionada, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" id="fechaSeleccionada" name="FechaSeleccionada" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FuncionId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <select id="funcionId" name="FuncionId" class="form-control" disabled>
+                            <option value="">-- Seleccione una hora --</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.FuncionId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", id = "precio" } })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NombreSala, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.NombreSala, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", id = "nombreSala" } })
                     </div>
                 </div>
             </div>
-        }
-  
+        </div>
+
+        <!-- Sección de Asientos -->
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 14px; margin-top: 15px">Selección de Asientos</h3>
+            </div>
+            <div>
+                <div class="panel-body">
+                    <!-- Layout visual de la sala de cine -->
+                    <div class="cinema-layout" id="cinemaLayout" style="display: none;">
+                        <div class="screen">PANTALLA</div>
+
+                        <div class="seats-grid" id="seatsGrid">
+                            <!-- Los asientos se generarán dinámicamente aquí -->
+                        </div>
+
+        
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-seat available"></div>
+                                <span>Disponible</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-seat selected"></div>
+                                <span>Seleccionado</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-seat occupied"></div>
+                                <span>Ocupado</span>
+                            </div>
+                        </div>
+                    </div>
+
+             
+                    <div id="noFunctionMessage" class="alert alert-info">
+                        <strong>Seleccione una función primero para ver los asientos disponibles</strong>
+                    </div>
+
+             
+                    <div class="selection-info" id="selectionInfo" style="display: none;">
+                        <div class="selection-summary">
+                            <div>
+                                <strong>Asientos seleccionados:</strong>
+                                <span class="selected-seats" id="selectedSeatsDisplay">Ninguno</span>
+                            </div>
+                            <div class="total-price" id="totalPrice">Total: $0</div>
+                        </div>
+                    </div>
+
+                    <!-- Campo para el formulario (mantiene compatibilidad con tu sistema) -->
+                    <div class="form-group" style="margin-top: 15px;">
+                        @Html.LabelFor(model => model.AsientosSeleccionados, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.AsientosSeleccionados, new { @class = "form-control", @readonly = "readonly", rows = "2", id = "asientosSeleccionados" })
+                            @Html.ValidationMessageFor(model => model.AsientosSeleccionados, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Método de Pago -->
+        <div class="panel panel-primary" style="margin-top: 15px;">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 14px; margin-top: 15px">Método de Pago</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.MetodoPagoId, Model.MetodosPago, "-- Seleccione un método de pago --", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MetodoPagoId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Guardar Reserva" class="btn btn-primary btn-lg" style="font-size: 14px;" />
+                @Html.ActionLink("Cerrar", "HistorialReservas", "EmpleadoHistorial", new { @class = "btn btn-default btn-cancel", style = "font-size: 14px;" })
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
 
 @section scripts {
     <script>
-    $(document).ready(function () {
-        // Esta parte es para que el empleado busque al cliente
-        // especialmente si este ya tiene una cuenta con nosotros
-        $("#btnBuscarCliente").click(function () {
-            $("#emailCliente").prop("disabled", false);
-            var email = $("#emailCliente").val();
-            if (email) {
-                $.ajax({
-                    url: '@Url.Action("BuscarCliente")',
-                    type: 'POST',
-                    data: { email: email },
-                    success: function (result) {
-                        if (result.success) {
-                            $("#usuarioId").val(result.usuarioId);
+          $(document).ready(function () {
 
-                            $("#nombreCliente").val(result.nombreCliente).prop("disabled", true);
-                            $("#telefonoCliente").val(result.telefonoCliente).prop("disabled", true);
-                            $("#emailCliente2").val(result.emailCliente2).prop("disabled", true);
+            let asientosDisponiblesData = [];
+            let asientosSeleccionados = [];
+            let precioActual = 0;
+            let fechasDisponibles = [];
 
-                            $("<input>").attr({
-                                type: "hidden",
-                                id: "clienteExistente",
-                                name: "clienteExistente",
-                                value: "true"
-                            }).appendTo("form");
-                            alert("Cliente encontrado correctamente.");
-                        } else {
-                            $("#usuarioId").val("");
-                            alert(result.message || "Cliente no encontrado. Presione '¿Cliente nuevo?' para ingresar datos manualmente.");
+     
+            $("#btnBuscarCliente").click(function () {
+                $("#emailCliente").prop("disabled", false);
+                var email = $("#emailCliente").val();
+                if (email) {
+                    $.ajax({
+                        url: '@Url.Action("BuscarCliente")',
+                        type: 'POST',
+                        data: { email: email },
+                        success: function (result) {
+                            if (result.success) {
+                                $("#usuarioId").val(result.usuarioId);
+                                $("#nombreCliente").val(result.nombreCliente).prop("disabled", true);
+                                $("#telefonoCliente").val(result.telefonoCliente).prop("disabled", true);
+                                $("#emailCliente2").val(result.emailCliente2).prop("disabled", true);
+
+                                $("<input>").attr({
+                                    type: "hidden",
+                                    id: "clienteExistente",
+                                    name: "clienteExistente",
+                                    value: "true"
+                                }).appendTo("form");
+                                alert("Cliente encontrado correctamente.");
+                            } else {
+                                $("#usuarioId").val("");
+                                alert(result.message || "Cliente no encontrado. Presione '¿Cliente nuevo?' para ingresar datos manualmente.");
+                            }
+                        },
+                        error: function () {
+                            alert("Error al buscar el cliente.");
                         }
-                    },
-                    error: function () {
-                        alert("Error al buscar el cliente.");
-                    }
-                });
-            } else {
-                alert("Ingrese un email para buscar el cliente.");
-            }
-        });
-
-        $("#btnClienteNuevo").click(function () {
-            $("#emailCliente").val("").prop("disabled", true);
-            $("#nombreCliente").val("").prop("disabled", false);
-            $("#emailCliente2").val("").prop("disabled", false);
-            $("#telefonoCliente").val("").prop("disabled", false);
-
-            $("#usuarioId").val("");
-            $("#clienteExistente").remove();
-            $("#nombreCliente").focus();
-        });
-
-        flatpickr("#fechaSeleccionada", {
-            dateFormat: "Y-m-d",
-            defaultDate: new Date(),
-            disableMobile: true,
-            minDate: "today",
-            onChange: function(selectedDates, dateStr, instance) {
-                if (dateStr) {
-                    cargarHorasDisponibles(dateStr);
+                    });
+                } else {
+                    alert("Ingrese un email para buscar el cliente.");
                 }
-            }
-        });
+            });
 
-        var fechasDisponibles = [];
+    
+            $("#btnClienteNuevo").click(function () {
+                $("#emailCliente").val("").prop("disabled", true);
+                $("#nombreCliente").val("").prop("disabled", false);
+                $("#emailCliente2").val("").prop("disabled", false);
+                $("#telefonoCliente").val("").prop("disabled", false);
+                $("#usuarioId").val("");
+                $("#clienteExistente").remove();
+                $("#nombreCliente").focus();
+            });
 
-        $("#peliculaId").change(function () {
-            var peliculaId = $(this).val();
-            if (peliculaId) {
-                $.ajax({
-                    url: '@Url.Action("ObtenerFechasDisponibles")',
-                    type: 'POST',
-                    data: { peliculaId: peliculaId },
-                    success: function (fechas) {
-                        fechasDisponibles = fechas;
-                        var fechaInput = $("#fechaSeleccionada");
-                        fechaInput.prop('disabled', false);
-                        fechaInput.val('');
-                        $("#funcionId").empty().append($('<option></option>').val('').html('-- Seleccione una hora --')).prop('disabled', true);
-                        $("#precio").val('');
-                        $("#nombreSala").val('');
+       
+            flatpickr("#fechaSeleccionada", {
+                dateFormat: "Y-m-d",
+                defaultDate: new Date(),
+                disableMobile: true,
+                minDate: "today",
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (dateStr) {
+                        cargarHorasDisponibles(dateStr);
                     }
-                });
-            } else {
-                $("#fechaSeleccionada").val('').prop('disabled', true);
-                $("#funcionId").empty().append($('<option></option>').val('').html('-- Seleccione una hora --')).prop('disabled', true);
-            }
-        });
+                }
+            });
 
-        // Después que el empleado haya seleccionado una fecha en particular,
-        // Se carga este combo box con las horas disponibles
-        function cargarHorasDisponibles(fechaSeleccionada) {
+   
+            $("#peliculaId").change(function () {
+                var peliculaId = $(this).val();
+                if (peliculaId) {
+                    $.ajax({
+                        url: '@Url.Action("ObtenerFechasDisponibles")',
+                        type: 'POST',
+                        data: { peliculaId: peliculaId },
+                        success: function (fechas) {
+                            fechasDisponibles = fechas;
+                            var fechaInput = $("#fechaSeleccionada");
+                            fechaInput.prop('disabled', false);
+                            fechaInput.val('');
+                            $("#funcionId").empty().append($('<option></option>').val('').html('-- Seleccione una hora --')).prop('disabled', true);
+                            $("#precio").val('');
+                            $("#nombreSala").val('');
+                        }
+                    });
+                } else {
+                    $("#fechaSeleccionada").val('').prop('disabled', true);
+                    $("#funcionId").empty().append($('<option></option>').val('').html('-- Seleccione una hora --')).prop('disabled', true);
+                }
+            });
+
+             function cargarHorasDisponibles(fechaSeleccionada) {
             var peliculaId = $("#peliculaId").val();
             if (!peliculaId) return;
 
@@ -293,84 +484,251 @@
             });
         }
 
-        // Cargar precio, sala y asientos disponibles cuando se selecciona una función
-        $("#funcionId").change(function () {
-            var funcionId = $(this).val();
-            if (funcionId) {
-                $.ajax({
-                    url: '@Url.Action("ObtenerDetallesFuncion")',
-                    type: 'POST',
-                    data: { funcionId: funcionId },
-                    success: function (funcion) {
-                        if (funcion.success) {
-                            $("#precio").val(funcion.data.precio);
-                            $("#nombreSala").val(funcion.data.salaNombre);
 
-                            $.ajax({
-                                url: '@Url.Action("ObtenerAsientosDisponibles")',
-                                type: 'POST',
-                                data: { funcionId: funcionId },
-                                success: function (asientos) {
-                                    var asientosSelect = $("#asientosDisponibles");
-                                    asientosSelect.empty();
-                                    $.each(asientos, function (i, asiento) {
-                                        asientosSelect.append($('<option></option>').val(asiento.Nombre).html(asiento.Nombre));
-                                    });
-                                    asientosSelect.prop('disabled', false);
-                                }
-                            });
+            // Cambio de función
+            $("#funcionId").off('change').on('change', function () {
+                var funcionId = $(this).val();
+                if (funcionId) {
+                    $.ajax({
+                        url: '@Url.Action("ObtenerDetallesFuncion")',
+                        type: 'POST',
+                        data: { funcionId: funcionId },
+                        success: function (funcion) {
+                            if (funcion.success) {
+                                $("#precio").val(funcion.data.precio);
+                                $("#nombreSala").val(funcion.data.salaNombre);
+                                precioActual = parseFloat(funcion.data.precio) || 0;
+                                cargarAsientosVisual(funcionId);
+                            }
                         }
-                    }
-                });
-            } else {
-                $("#precio").val('');
-                $("#nombreSala").val('');
-                $("#asientosDisponibles").empty().append($('<option></option>').html('Seleccione una función primero')).prop('disabled', true);
-            }
-        });
-
-        $("#btnAgregarAsiento").click(function () {
-            var asientosDisponibles = $("#asientosDisponibles");
-            var asientosSeleccionadosLista = $("#asientosSeleccionadosLista");
-            var asientosSeleccionados = $("#asientosSeleccionados");
-
-            var seleccionados = asientosDisponibles.val();
-            if (seleccionados && seleccionados.length > 0) {
-                $.each(seleccionados, function (i, asiento) {
-                    if (asientosSeleccionadosLista.find("option[value='" + asiento + "']").length === 0) {
-                        asientosSeleccionadosLista.append($('<option></option>').val(asiento).html(asiento));
-                        asientosDisponibles.find("option[value='" + asiento + "']").remove();
-                    }
-                });
-                actualizarCampoAsientos();
-            } else {
-                alert("Seleccione al menos un asiento para agregar.");
-            }
-        });
-
-        $("#btnQuitarAsiento").click(function () {
-            var asientosSeleccionadosLista = $("#asientosSeleccionadosLista");
-            var asientosDisponibles = $("#asientosDisponibles");
-
-            var seleccionados = asientosSeleccionadosLista.val();
-            if (seleccionados && seleccionados.length > 0) {
-                $.each(seleccionados, function (i, asiento) {
-                    asientosSeleccionadosLista.find("option[value='" + asiento + "']").remove();
-                    asientosDisponibles.append($('<option></option>').val(asiento).html(asiento));
-                });
-                actualizarCampoAsientos();
-            } else {
-                alert("Seleccione al menos un asiento para quitar.");
-            }
-        });
-
-        function actualizarCampoAsientos() {
-            var asientosList = [];
-            $("#asientosSeleccionadosLista option").each(function () {
-                asientosList.push($(this).val());
+                    });
+                } else {
+                    $("#precio").val('');
+                    $("#nombreSala").val('');
+                    precioActual = 0;
+                    mostrarMensajeNoFuncion();
+                }
             });
-            $("#asientosSeleccionados").val(asientosList.join(", "));
+
+      
+            mostrarMensajeNoFuncion();
+
+       
+            if ($('#btnLimpiarAsientos').length === 0) {
+                $('<button type="button" class="btn btn-warning" id="btnLimpiarAsientos" style="font-size: 14px; margin-left: 10px;">Limpiar Selección</button>')
+                    .insertAfter('#asientosSeleccionados')
+                    .click(function() {
+                        limpiarSeleccionAsientos();
+                    });
+            }
+        });
+
+        function cargarAsientosVisual(funcionId) {
+            if (!funcionId) {
+                mostrarMensajeNoFuncion();
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("ObtenerAsientosDisponibles")',
+                type: 'POST',
+                data: { funcionId: funcionId },
+                success: function (asientos) {
+                    asientosDisponiblesData = asientos;
+                    generarSalaVisual(asientos);
+                    mostrarSalaVisual();
+                },
+                error: function() {
+                    alert("Error al cargar los asientos disponibles.");
+                    mostrarMensajeNoFuncion();
+                }
+            });
+        }
+
+
+
+            function generarSalaVisual(asientos) {
+                const seatsGrid = document.getElementById('seatsGrid');
+                seatsGrid.innerHTML = '';
+
+                if (!asientos || asientos.length === 0) {
+                    seatsGrid.innerHTML = '<div style="color: white; padding: 20px;">No hay asientos disponibles para esta función</div>';
+                    return;
+                }
+
+       
+                const asientosPorFila = {};
+                asientos.forEach(asiento => {
+                    const fila = asiento.Fila;
+                    if (!asientosPorFila[fila]) {
+                        asientosPorFila[fila] = [];
+                    }
+                    asientosPorFila[fila].push(asiento);
+                });
+
+       
+                const filasOrdenadas = Object.keys(asientosPorFila).sort();
+
+            
+                filasOrdenadas.forEach(fila => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'row';
+
+ 
+                    const rowLabel = document.createElement('div');
+                    rowLabel.className = 'row-label';
+                    rowLabel.textContent = fila;
+                    rowDiv.appendChild(rowLabel);
+
+
+                    const asientosFila = asientosPorFila[fila].sort((a, b) => a.Numero - b.Numero);
+
+
+                    asientosFila.forEach(asiento => {
+                        const seatButton = document.createElement('button');
+                        seatButton.className = `seat ${asiento.Estado}`;
+                        seatButton.setAttribute('data-seat-id', asiento.Id);
+                        seatButton.setAttribute('data-seat-name', asiento.Nombre);
+                        seatButton.textContent = asiento.Numero;
+                        seatButton.title = `Asiento ${asiento.Nombre}`;
+                        seatButton.type = 'button';
+
+
+                        if (asiento.Estado === 'disponible') {
+                            seatButton.addEventListener('click', () => toggleAsiento(asiento));
+                        } else {
+                            seatButton.disabled = true;
+                        }
+
+                        rowDiv.appendChild(seatButton);
+                    });
+
+                    seatsGrid.appendChild(rowDiv);
+                });
+
+                actualizarInterfazSeleccion();
+            }
+
+
+    function toggleAsiento(asiento) {
+    const index = asientosSeleccionados.findIndex(a => a.Id === asiento.Id);
+    const seatButton = document.querySelector(`[data-seat-id="${asiento.Id}"]`);
+
+    if (index > -1) {
+  
+        asientosSeleccionados.splice(index, 1);
+        seatButton.className = 'seat available';
+    } else {
+ 
+        asientosSeleccionados.push(asiento);
+        seatButton.className = 'seat selected';
+    }
+
+    actualizarInterfazSeleccion();
+    }
+
+    function actualizarInterfazSeleccion() {
+    const selectedSeatsDisplay = document.getElementById('selectedSeatsDisplay');
+    const totalPrice = document.getElementById('totalPrice');
+    const asientosSeleccionadosInput = document.getElementById('asientosSeleccionados');
+
+
+    const asientosOrdenados = asientosSeleccionados
+        .map(a => a.Nombre)
+        .sort();
+
+
+    if (asientosOrdenados.length === 0) {
+        selectedSeatsDisplay.textContent = 'Ninguno';
+    } else {
+        selectedSeatsDisplay.textContent = asientosOrdenados.join(', ');
+    }
+
+  
+    const total = asientosOrdenados.length * precioActual;
+    totalPrice.textContent = `Total: $${total.toLocaleString()}`;
+
+
+    asientosSeleccionadosInput.value = asientosOrdenados.join(', ');
+    }
+
+
+    function mostrarSalaVisual() {
+    document.getElementById('cinemaLayout').style.display = 'block';
+    document.getElementById('selectionInfo').style.display = 'block';
+    document.getElementById('noFunctionMessage').style.display = 'none';
+    }
+
+
+    function mostrarMensajeNoFuncion() {
+    document.getElementById('cinemaLayout').style.display = 'none';
+    document.getElementById('selectionInfo').style.display = 'none';
+    document.getElementById('noFunctionMessage').style.display = 'block';
+
+ 
+    asientosSeleccionados = [];
+    asientosDisponiblesData = [];
+    document.getElementById('asientosSeleccionados').value = '';
+    }
+
+
+        function limpiarSeleccionAsientos() {
+        asientosSeleccionados = [];
+
+    
+        document.querySelectorAll('.seat.selected').forEach(seat => {
+        seat.className = 'seat available';
+    });
+
+        actualizarInterfazSeleccion();
+    }
+
+
+        $(document).ready(function() {
+ 
+        mostrarMensajeNoFuncion();
+
+        $("#funcionId").off('change').on('change', function () {
+        var funcionId = $(this).val();
+        if (funcionId) {
+            $.ajax({
+                url: '@Url.Action("ObtenerDetallesFuncion")',
+                type: 'POST',
+                data: { funcionId: funcionId },
+                success: function (funcion) {
+                    if (funcion.success) {
+                        $("#precio").val(funcion.data.precio);
+                        $("#nombreSala").val(funcion.data.salaNombre);
+
+                 
+                        precioActual = parseFloat(funcion.data.precio) || 0;
+
+            
+                        cargarAsientosVisual(funcionId);
+                    }
+                }
+            });
+        } else {
+            $("#precio").val('');
+            $("#nombreSala").val('');
+            precioActual = 0;
+            mostrarMensajeNoFuncion();
         }
     });
-    </script>
+
+  
+    if ($('#btnLimpiarAsientos').length === 0) {
+        $('<button type="button" class="btn btn-warning" id="btnLimpiarAsientos" style="font-size: 14px; margin-left: 10px;">Limpiar Selección</button>')
+            .insertAfter('#asientosSeleccionados')
+            .closest('.form-group')
+            .find('.col-md-10')
+            .append($('#btnLimpiarAsientos'));
+
+        $('#btnLimpiarAsientos').click(function() {
+            limpiarSeleccionAsientos();
+        });
+    }
+});
+
+</script>
 }
