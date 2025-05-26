@@ -67,11 +67,9 @@
 </div>
 
 <script>
-    // Esperar a que jQuery esté cargado
     function waitForJQuery() {
         if (window.jQuery) {
             $(document).ready(function () {
-                // Manejar selección de método de pago
                 $('.payment-option').click(function () {
                     $('.payment-option').removeClass('selected border-primary bg-light');
                     $(this).addClass('selected border-primary bg-light');
@@ -79,7 +77,6 @@
                     const metodo = $(this).data('method');
                     $('#metodoPago').val(metodo);
 
-                    // Mostrar el método seleccionado
                     const metodoTexto = metodo == 2 ? 'PayPal' : 'Efectivo';
                     $('#paymentSelectionInfo').html('Método seleccionado: <strong>' + metodoTexto + '</strong>');
                 });
@@ -89,6 +86,5 @@
         }
     }
 
-    // Iniciar la espera de jQuery
     waitForJQuery();
 </script>

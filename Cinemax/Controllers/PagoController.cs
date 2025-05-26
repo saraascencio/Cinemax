@@ -14,7 +14,7 @@ namespace Cinemax.Controllers
         // hacerlo desde el controlador que se va a llamar
 return RedirectToAction("Pago", "Pago", new { id_Reserva = reservaId });
         */
-        public ActionResult Pago(int id_Reserva=41)
+        public ActionResult Pago(int id_Reserva)
         {
             TempData["id_Reserva"] = id_Reserva;
             return View();
