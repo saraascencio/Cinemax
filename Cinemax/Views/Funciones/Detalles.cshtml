@@ -1,59 +1,36 @@
-﻿@model Cinemax.ViewModels.FuncionDetalleViewModel
+﻿@model Cinemax.Models.Funcion
 
 @{
     ViewBag.Title = "Detalles de la Función";
     Layout = "~/Views/Shared/_LayoutCliente.cshtml";
-    var funcion = Model.Funcion;
-    var asientosAgrupados = Model.Asientos
-        .GroupBy(a => a.Asiento.ASI_Fila)
-        .OrderBy(g => g.Key);
 }
-
-<style>
-    .asiento-btn {
-        width: 44px;
-        height: 44px;
-        font-size: 0.8rem;
-        border-radius: 50px;
-        padding: 0;
-    }
-
-        .asiento-btn.ocupado {
-            background-color: #e74c3c;
-            border-color: #e74c3c;
-            color: white;
-            cursor: not-allowed;
-        }
-
-        .asiento-btn.seleccionado {
-            background-color: #6f42c1;
-            color: white;
-        }
-</style>
 
 <div class="container mt-4">
     <div class="row">
+    
         <div class="col-md-5">
-            <img src="@funcion.Pelicula.PEL_ImagenURL" class="img-fluid rounded shadow" alt="Portada de @funcion.Pelicula.PEL_Titulo" />
+            <img src="@Model.Pelicula.PEL_ImagenURL" class="img-fluid rounded shadow" alt="Portada de @Model.Pelicula.PEL_Titulo" />
         </div>
+
+        <!-- Informacion de la pelicula -->
         <div class="col-md-7">
-            <h2>@funcion.Pelicula.PEL_Titulo</h2>
+            <h2>@Model.Pelicula.PEL_Titulo</h2>
+
             <span class="badge bg-success mb-2">Precio</span>
-            <h3 class="fw-bold">$@funcion.FUN_Precio.ToString("F2") por persona</h3>
-            <p><strong>Fecha y hora:</strong> @funcion.FUN_Fechahora.ToString("dddd dd MMMM yyyy, hh:mm tt")</p>
-            <p><strong>Sala:</strong> @funcion.Sala.SAL_Nombre</p>
+            <h3 class="fw-bold">$@Model.FUN_Precio.ToString("F2") por persona</h3>
 
-            <!-- Botón para abrir modal de asientos -->
-            <button type="button" class="btn btn-purple mb-4" data-bs-toggle="modal" data-bs-target="#modalAsientos">
-                Seleccionar Asientos
-            </button>
+            <p><strong>Fecha y hora:</strong> @Model.FUN_Fechahora.ToString("dddd dd MMMM yyyy, hh:mm tt")</p>
+            <p><strong>Sala:</strong> @Model.Sala.SAL_Nombre</p>
 
-            <form action="/Asientos/Seleccionar" method="get" onsubmit="return validarSeleccion();">
-                <input type="hidden" name="idFuncion" value="@funcion.ID_Funcion" />
-                <input type="hidden" name="asientos" id="asientosSeleccionados" />
-                <button type="submit" class="btn btn-lg btn-purple w-100" disabled id="btnConfirmar">
-                    Continuar a Pago
-                </button>
+            <form action="/Asientos/Seleccionar" method="get">
+                <input type="hidden" name="idFuncion" value="@Model.ID_Funcion" />
+
+                <div class="mb-3">
+                    <label for="asientos" class="form-label">Tus asientos</label>
+                    <input type="text" name="asientos" id="asientos" class="form-control" placeholder="Ej: A1,A2,A3" />
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-purple w-100">Siguiente</button>
             </form>
 
             <div class="alert alert-light mt-3" role="alert">
@@ -62,72 +39,3 @@
         </div>
     </div>
 </div>
-
-<!-- Modal de selección de asientos -->
-<div class="modal fade" id="modalAsientos" tabindex="-1" aria-labelledby="modalAsientosLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalAsientosLabel">Selecciona tus asientos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <div id="gridAsientos" class="d-flex flex-column gap-2">
-                    @foreach (var fila in asientosAgrupados)
-                    {
-                        <div class="d-flex justify-content-center gap-2 asiento-row">
-                            @foreach (var asientoFunc in fila.OrderBy(a => a.Asiento.ASI_Numero))
-                            {
-                                var codigo = asientoFunc.Asiento.ASI_Fila + asientoFunc.Asiento.ASI_Numero.ToString();
-                                var ocupado = asientoFunc.ID_EstadoAsiento == 2;
-                                <button type="button"
-                                        class="btn asiento-btn @(ocupado ? "ocupado" : "btn-outline-secondary")"
-                                        data-asiento="@codigo"
-                                        @(ocupado ? "disabled" : "")
-                                        onclick="toggleAsiento(this)">
-                                    @codigo
-                                </button>
-                            }
-                        </div>
-                    }
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-purple" onclick="confirmarSeleccion()">Confirmar selección</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    const asientosSeleccionados = new Set();
-    const btnConfirmar = document.getElementById('btnConfirmar');
-
-    function toggleAsiento(btn) {
-        const asiento = btn.dataset.asiento;
-        if (btn.classList.contains('ocupado')) return;
-        btn.classList.toggle('seleccionado');
-        if (asientosSeleccionados.has(asiento)) {
-            asientosSeleccionados.delete(asiento);
-        } else {
-            asientosSeleccionados.add(asiento);
-        }
-        document.getElementById('asientosSeleccionados').value = Array.from(asientosSeleccionados).join(',');
-        btnConfirmar.disabled = asientosSeleccionados.size === 0;
-    }
-
-    function confirmarSeleccion() {
-        // Cierra el modal y habilita el botón de continuar
-        var modal = bootstrap.Modal.getInstance(document.getElementById('modalAsientos'));
-        modal.hide();
-    }
-
-    function validarSeleccion() {
-        if (asientosSeleccionados.size === 0) {
-            alert('Selecciona al menos un asiento.');
-            return false;
-        }
-        return true;
-    }
-</script>
