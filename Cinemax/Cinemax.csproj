@@ -336,6 +336,7 @@
     <Compile Include="ViewModels\CrearReservaEViewModel.cs" />
     <Compile Include="ViewModels\CarteleraViewModel.cs" />
     <Compile Include="ViewModels\EditarReservaViewModel.cs" />
+    <Compile Include="ViewModels\FuncionDetalleViewModel.cs" />
     <Compile Include="ViewModels\ReservaViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
