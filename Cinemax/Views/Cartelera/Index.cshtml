@@ -4,6 +4,7 @@
     ViewBag.Title = "Cartelera";
     Layout = "~/Views/Shared/_LayoutCliente.cshtml";
     var fechaSeleccionada = ViewBag.FechaSeleccionada as DateTime?;
+    var fechaInputValue = (fechaSeleccionada ?? DateTime.Today).ToString("yyyy-MM-dd");
     var generoSeleccionado = ViewBag.GeneroSeleccionado as string;
 }
 <!-- Flatpickr CSS & JS desde CDN -->
@@ -30,20 +31,22 @@
                    class="btn rounded-pill @(generoSeleccionado == g ? "btn-primary text-white" : "btn-outline-secondary")">@g</a>
             }
             <!-- Selector de fecha en botón visual -->
-            <div>
-                <div class="input-group rounded-pill border" style="max-width: 220px;">
-                    <span class="input-group-text bg-white border-0">
-                        <iconify-icon icon="mdi:calendar-month" width="20" height="20"></iconify-icon>
-                    </span>
-                    <input type="text"
-                           id="fechaSelector"
-                           name="fecha"
-                           class="form-control border-0 bg-white flatpickr"
-                           value="@fechaSeleccionada?.ToString(" yyyy-MM-dd")"
-                           onchange="this.form.submit()"
-                           placeholder="Seleccionar fecha" />
-                </div>
+            <div style="position: relative;">
+                <button type="button" id="btnCalendario"
+                        class="btn btn-light rounded-pill d-flex align-items-center justify-content-center"
+                        style="width: 44px; height: 44px;">
+                    <iconify-icon icon="mdi:calendar-month" width="24" height="24"></iconify-icon>
+                </button>
+
+                <!-- Input que Flatpickr usa, pero no se ve -->
+                <input type="text"
+                       id="fechaSelector"
+                       name="fecha"
+                       class="d-none"
+                       value="@fechaInputValue?.ToString("yyyy-MM-dd")" />
             </div>
+
+
 
 
         </div>
@@ -148,10 +151,27 @@
     </div>
 </div>
 
+
 <script>
-    flatpickr("#fechaSelector", {
-        dateFormat: "Y-m-d",
-        defaultDate: "@(fechaSeleccionada?.ToString("yyyy-MM-dd") ?? DateTime.Today.ToString("yyyy-MM-dd"))"
+    document.addEventListener("DOMContentLoaded", function () {
+        const input = document.getElementById("fechaSelector");
+        const trigger = document.getElementById("btnCalendario");
+
+        if (!input || !trigger) return;
+
+        const flat = flatpickr(input, {
+            dateFormat: "Y-m-d",
+            defaultDate: input.value || new Date(),
+            onChange: function (selectedDates, dateStr) {
+                const genero = new URLSearchParams(window.location.search).get("genero") || "";
+                const url = `@Url.Action("Index", "Cartelera")?fecha=${dateStr}&genero=${genero}`;
+                window.location.href = url;
+            },
+            appendTo: trigger.parentElement
+        });
+
+        trigger.addEventListener("click", function () {
+            flat.open();
+        });
     });
 </script>
-
