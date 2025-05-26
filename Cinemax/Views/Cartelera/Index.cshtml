@@ -6,6 +6,9 @@
     var fechaSeleccionada = ViewBag.FechaSeleccionada as DateTime?;
     var generoSeleccionado = ViewBag.GeneroSeleccionado as string;
 }
+<!-- Flatpickr CSS & JS desde CDN -->
+<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
@@ -26,23 +29,22 @@
                 <a href="@Url.Action("Index", "Cartelera", new { genero = g, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })"
                    class="btn rounded-pill @(generoSeleccionado == g ? "btn-primary text-white" : "btn-outline-secondary")">@g</a>
             }
-
-            <div class="position-relative" style="width: 44px; height: 44px;">
-                <!-- Input invisible pero funcional encima del botón -->
-                <input type="date"
-                       id="fechaSelector"
-                       name="fecha"
-                       value="@fechaSeleccionada?.ToString(" yyyy-MM-dd")"
-                       onchange="this.form.submit()"
-                       class="position-absolute top-0 start-0 w-100 h-100"
-                       style="opacity: 0; z-index: 2; cursor: pointer;" />
-
-                <!-- Ícono visible debajo -->
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-                     style="background-color: #bb52f5; border-radius: 12px; z-index: 1;">
-                    <iconify-icon icon="mdi:calendar-month" width="24" height="24" style="color: white;"></iconify-icon>
+            <!-- Selector de fecha en botón visual -->
+            <div>
+                <div class="input-group rounded-pill border" style="max-width: 220px;">
+                    <span class="input-group-text bg-white border-0">
+                        <iconify-icon icon="mdi:calendar-month" width="20" height="20"></iconify-icon>
+                    </span>
+                    <input type="text"
+                           id="fechaSelector"
+                           name="fecha"
+                           class="form-control border-0 bg-white flatpickr"
+                           value="@fechaSeleccionada?.ToString(" yyyy-MM-dd")"
+                           onchange="this.form.submit()"
+                           placeholder="Seleccionar fecha" />
                 </div>
             </div>
+
 
         </div>
     </form>
@@ -53,28 +55,40 @@
         {
             <div class="col-md-6 mb-4">
                 <a href="@Url.Action("Detalles", "Funciones", new { id = f.ID_Funcion })" class="text-decoration-none text-dark">
-                    <div class="card flex-row shadow-sm rounded overflow-hidden" style="min-height: 180px;">
+                    <div class="card flex-row shadow-sm rounded overflow-hidden" style="min-height: 200px; height: 100%;">
+                        <!-- Imagen -->
                         <div class="col-4 p-0">
-                            <img src="@f.Pelicula.PEL_ImagenURL" alt="@f.Pelicula.PEL_Titulo" class="img-fluid h-100 w-100 object-fit-cover" />
+                            <img src="@f.Pelicula.PEL_ImagenURL"
+                                 alt="@f.Pelicula.PEL_Titulo"
+                                 class="img-fluid h-100 w-100 object-fit-cover" />
                         </div>
-                        <div class="col-8 p-3 d-flex flex-column justify-content-between">
+
+                        <!-- Contenido -->
+                        <div class="col-8 p-3 d-flex flex-column justify-content-between" style="min-height: 200px;">
                             <div>
-                                <h5 class="fw-bold">@f.Pelicula.PEL_Titulo</h5>
-                                <p class="text-muted small mb-1">@f.Pelicula.PEL_Sinopsis</p>
+                                <h5 class="fw-bold text-truncate" title="@f.Pelicula.PEL_Titulo">@f.Pelicula.PEL_Titulo</h5>
+
+                                <!-- Sinopsis limitada -->
+                                <p class="text-muted small mb-2" style="max-height: 48px; overflow: hidden; text-overflow: ellipsis;">
+                                    @f.Pelicula.PEL_Sinopsis
+                                </p>
+
                                 <p class="mb-0"><strong>Hora:</strong> @f.FUN_Fechahora.ToString("hh:mm tt")</p>
                                 <p class="mb-0"><strong>Sala:</strong> @f.Sala.SAL_Nombre</p>
                                 <p class="mb-0"><strong>Precio:</strong> $@f.FUN_Precio.ToString("F2")</p>
                             </div>
+
+                            <!-- Enlace inferior -->
                             <span class="text-primary mt-2 small">Ver detalles →</span>
                         </div>
                     </div>
                 </a>
             </div>
         }
-
     </div>
 
-    <!-- Paginación real -->
+
+    <!-- Paginación -->
     <div class="d-flex justify-content-center mt-3">
         <nav aria-label="Page navigation">
             <ul class="pagination pagination-lg gap-2 flex-wrap justify-content-center">
@@ -133,3 +147,11 @@
         </nav>
     </div>
 </div>
+
+<script>
+    flatpickr("#fechaSelector", {
+        dateFormat: "Y-m-d",
+        defaultDate: "@(fechaSeleccionada?.ToString("yyyy-MM-dd") ?? DateTime.Today.ToString("yyyy-MM-dd"))"
+    });
+</script>
+
