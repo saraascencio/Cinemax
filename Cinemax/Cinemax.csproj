@@ -258,7 +258,6 @@
     <Compile Include="Controllers\EmpleadoPDFController.cs" />
     <Compile Include="Controllers\FuncionesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PagoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -406,8 +405,6 @@
     <Content Include="Views\Funciones\Detalles.cshtml" />
     <Content Include="Views\Shared\_LayoutEmpleado.cshtml" />
     <Content Include="Views\EmpleadoMetricas\MiPerfil.cshtml" />
-    <Content Include="Views\Pago\Pago.cshtml" />
-    <Content Include="Views\Pago\PagoAprovado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
