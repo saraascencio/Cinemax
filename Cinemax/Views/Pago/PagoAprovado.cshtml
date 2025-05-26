@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Pago Aprobado";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm text-center">
+        <div class="card-body p-5">
+            <div class="mb-4">
+                <img src="https://st4.depositphotos.com/7662228/30134/v/450/depositphotos_301340738-stock-illustration-approved-icon-profile-verification-accept.jpg"
+                     alt="Pago exitoso"
+                     class="img-fluid mb-4"
+                     style="max-width: 150px;">
+            </div>
+
+            <h1 class="card-title mb-4">Datos personales</h1>
+
+            <div class="alert alert-success mb-4">
+                <h4 class="alert-heading">¡Su pago ha sido exitoso!</h4>
+                <p class="mb-0">
+                    Se ha enviado a su correo un email con el código QR de su reserva y en conjunto con los detalles.
+                    <br>
+                    ¡Gracias por confiar en Cinemax!
+                </p>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a href="@Url.Action("Index", "Cartelera")" class="btn btn-primary btn-lg">
+                    Volver a cartelera
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 15px;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+
+    .btn-primary {
+        background-color: #0070ba;
+        border-color: #0070ba;
+    }
+
+        .btn-primary:hover {
+            background-color: #005ea6;
+            border-color: #005ea6;
+        }
+</style>
