@@ -4,11 +4,18 @@
 }
 
 <div class="container mt-5">
+    @if (TempData["ErrorPago"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorPago"]
+        </div>
+    }
+
     <div class="card shadow-sm">
         <div class="card-body p-4">
             <h1 class="card-title mb-4">Datos personales</h1>
 
-            <form id="paymentForm">
+            <form id="paymentForm" action="@Url.Action("ProcesarPago", "Pago")" method="post">
                 <div class="mb-4">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Nombre</label>
@@ -30,20 +37,20 @@
                     <h2 class="h5 mb-3">Elegir forma de pago</h2>
 
                     <div class="d-grid gap-3">
-                        <div class="payment-option p-3 border rounded" data-method="paypal">
+                        <div class="payment-option p-3 border rounded" data-method="2">
                             <div class="d-flex align-items-center">
                                 <img src="https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_640.png" alt="PayPal" class="payment-icon me-3" style="width: 40px; height: 40px;">
                                 <span>Paypal</span>
                             </div>
                         </div>
-                        <div class="payment-option selected p-3 border rounded" data-method="efectivo">
+                        <div class="payment-option selected p-3 border rounded" data-method="3">
                             <div class="d-flex align-items-center">
                                 <img src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cash-in-hand-icon-cartoon-style-png-image_5211912.jpg" alt="Efectivo" class="payment-icon me-3" style="width: 40px; height: 40px;">
                                 <span>Efectivo</span>
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" id="metodoPago" name="metodoPago" value="efectivo">
+                    <input type="hidden" id="metodoPago" name="metodoPago" value="3">
                 </div>
 
                 <hr class="my-4">
@@ -73,36 +80,8 @@
                     $('#metodoPago').val(metodo);
 
                     // Mostrar el método seleccionado
-                    const metodoTexto = metodo === 'paypal' ? 'PayPal' : 'Efectivo';
+                    const metodoTexto = metodo == 2 ? 'PayPal' : 'Efectivo';
                     $('#paymentSelectionInfo').html('Método seleccionado: <strong>' + metodoTexto + '</strong>');
-                });
-
-                // Manejar envío del formulario
-                $('#paymentForm').submit(function (e) {
-                    e.preventDefault();
-
-                    // Validación básica
-                    if (!$('#nombre').val() || !$('#apellido').val() || !$('#email').val()) {
-                        alert('Por favor complete todos los campos');
-                        return;
-                    }
-
-                    // Datos del formulario
-                    const formData = {
-                        nombre: $('#nombre').val(),
-                        apellido: $('#apellido').val(),
-                        email: $('#email').val(),
-                        metodoPago: $('#metodoPago').val()
-                    };
-
-                    console.log('Datos del formulario:', formData);
-                    alert('Reserva realizada con éxito!\nMétodo de pago: ' +
-                        (formData.metodoPago === 'paypal' ? 'PayPal' : 'Efectivo'));
-
-                    // Aquí puedes agregar AJAX para enviar al servidor
-                    // $.post('/TuControlador/TuAccion', formData, function(response) {
-                    //     // Manejar respuesta
-                    // });
                 });
             });
         } else {
