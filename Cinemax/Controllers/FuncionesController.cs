@@ -16,21 +16,14 @@ namespace Cinemax.Controllers
         public ActionResult Detalles(int id)
         {
             var funcion = db.Funcion
-                .Include(f => f.Pelicula)
-                .Include(f => f.Sala)
+                .Include("Pelicula")
+                .Include("Sala")
                 .FirstOrDefault(f => f.ID_Funcion == id);
 
-            var asientos = db.FuncionAsiento
-                .Include(fa => fa.Asiento)            // <— aquí
-                .Where(fa => fa.ID_Funcion == id)
-                .ToList();
+            if (funcion == null)
+                return HttpNotFound();
 
-            var vm = new FuncionDetalleViewModel
-            {
-                Funcion = funcion,
-                Asientos = asientos
-            };
-            return View(vm);
+            return View(funcion);
         }
     }
 }
