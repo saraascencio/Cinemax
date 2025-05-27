@@ -251,6 +251,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ClienteController.cs" />
     <Compile Include="Controllers\EmpleadoCrearController.cs" />
     <Compile Include="Controllers\CarteleraController.cs" />
     <Compile Include="Controllers\EmpleadoHistorialController.cs" />
@@ -337,7 +338,9 @@
     <Compile Include="ViewModels\CarteleraViewModel.cs" />
     <Compile Include="ViewModels\EditarReservaViewModel.cs" />
     <Compile Include="ViewModels\FuncionDetalleViewModel.cs" />
+    <Compile Include="ViewModels\HistorialReservaViewModel.cs" />
     <Compile Include="ViewModels\ReservaViewModel.cs" />
+    <None Include="Views\Cliente\Historial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

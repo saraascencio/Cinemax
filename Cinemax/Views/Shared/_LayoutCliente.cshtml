@@ -11,6 +11,7 @@
     <link rel="shortcut icon" type="image/png" href="~/Content/assets/images/logos/logocine.png" />
     <link rel="stylesheet" href="~/Content/assets/css/styles.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <style>
 
         .left-sidebar {
@@ -49,6 +50,8 @@
             margin-top: -65px !important;
         }
     </style>
+    @RenderSection("styles", required: false)
+
 </head>
 
 <body>
@@ -95,27 +98,6 @@
                             </a>
                         </li>
 
-                        <li>
-                            <span class="sidebar-divider lg"></span>
-                        </li>
-                        <li class="nav-small-cap">
-                            <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4"></iconify-icon>
-                            <span class="hide-menu">Cuenta</span>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Login", "Home")">
-                                <iconify-icon icon="solar:login-3-line-duotone"></iconify-icon>
-                                <span class="hide-menu">Login</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link primary-hover-bg" href="@Url.Action("Registro", "Home")">
-                                <iconify-icon icon="solar:user-plus-rounded-line-duotone"></iconify-icon>
-                                <span class="hide-menu">Registro</span>
-                            </a>
-                        </li>
                     </ul>
                 </nav>
             </div>
