@@ -48,13 +48,17 @@
                 Seleccionar Asientos
             </button>
 
-            <form action="/Asientos/Seleccionar" method="get" onsubmit="return validarSeleccion();">
-                <input type="hidden" name="idFuncion" value="@funcion.ID_Funcion" />
-                <input type="hidden" name="asientos" id="asientosSeleccionados" />
+            @using (Html.BeginForm("Pago", "Pago", FormMethod.Post, new { onsubmit = "return validarSeleccion();" }))
+            {
+                @Html.Hidden("idFuncion", funcion.ID_Funcion)
+                @Html.Hidden("idUsuario", (int)Session["usuarioId"])
+                @Html.Hidden("asientosSeleccionados", "", new { id = "asientosSeleccionados" })
+
                 <button type="submit" class="btn btn-lg btn-purple w-100" disabled id="btnConfirmar">
                     Continuar a Pago
                 </button>
-            </form>
+            }
+
 
             <div class="alert alert-light mt-3" role="alert">
                 <strong>Tomar en cuenta:</strong> Si su pago es exitoso, recibirá un PDF de confirmación y código QR para ingresar a la sala.
@@ -80,13 +84,16 @@
                             {
                                 var codigo = asientoFunc.Asiento.ASI_Fila + asientoFunc.Asiento.ASI_Numero.ToString();
                                 var ocupado = asientoFunc.ID_EstadoAsiento == 2;
+                                var idAsiento = asientoFunc.ID_Asiento;
+
                                 <button type="button"
                                         class="btn asiento-btn @(ocupado ? "ocupado" : "btn-outline-secondary")"
-                                        data-asiento="@codigo"
+                                        data-asiento="@idAsiento"
                                         @(ocupado ? "disabled" : "")
                                         onclick="toggleAsiento(this)">
                                     @codigo
                                 </button>
+
                             }
                         </div>
                     }
@@ -105,27 +112,28 @@
     const btnConfirmar = document.getElementById('btnConfirmar');
 
     function toggleAsiento(btn) {
-        const asiento = btn.dataset.asiento;
+        const idAsiento = btn.dataset.asiento;
         if (btn.classList.contains('ocupado')) return;
+
         btn.classList.toggle('seleccionado');
-        if (asientosSeleccionados.has(asiento)) {
-            asientosSeleccionados.delete(asiento);
+        if (asientosSeleccionados.has(idAsiento)) {
+            asientosSeleccionados.delete(idAsiento);
         } else {
-            asientosSeleccionados.add(asiento);
+            asientosSeleccionados.add(idAsiento);
         }
+
         document.getElementById('asientosSeleccionados').value = Array.from(asientosSeleccionados).join(',');
         btnConfirmar.disabled = asientosSeleccionados.size === 0;
     }
 
     function confirmarSeleccion() {
-        // Cierra el modal y habilita el botón de continuar
         var modal = bootstrap.Modal.getInstance(document.getElementById('modalAsientos'));
         modal.hide();
     }
 
     function validarSeleccion() {
         if (asientosSeleccionados.size === 0) {
-            alert('Selecciona al menos un asiento.');
+            alert("Selecciona al menos un asiento.");
             return false;
         }
         return true;

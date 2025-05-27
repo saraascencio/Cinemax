@@ -21,7 +21,7 @@ namespace Cinemax.Controllers
                 .FirstOrDefault(f => f.ID_Funcion == id);
 
             var asientos = db.FuncionAsiento
-                .Include(fa => fa.Asiento)            // <— aquí
+                .Include(fa => fa.Asiento)          
                 .Where(fa => fa.ID_Funcion == id)
                 .ToList();
 

@@ -77,7 +77,7 @@ namespace Cinemax.Controllers
             {
                 return RedirectToAction("Login");
             }
-
+            ViewBag.idUsuario = Session["usuarioId"];
             ViewBag.Nombre = Session["Nombre"];
             ViewBag.TipoUsuario = Session["TipoUsuario"];
             return View();
