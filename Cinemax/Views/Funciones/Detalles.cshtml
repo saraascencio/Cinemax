@@ -50,8 +50,8 @@
 
             @using (Html.BeginForm("Pago", "Pago", FormMethod.Post, new { onsubmit = "return validarSeleccion();" }))
             {
-                @Html.Hidden("idFuncion", funcion.ID_Funcion)
-                @Html.Hidden("idUsuario", (int)Session["usuarioId"])
+                @Html.Hidden("id_funcion", funcion.ID_Funcion)
+                @Html.Hidden("id_Usuario", (int)Session["usuarioId"])
                 <div id="asientosContainer"></div>
 
                 <button type="submit" class="btn btn-lg btn-purple w-100" disabled id="btnConfirmar">
