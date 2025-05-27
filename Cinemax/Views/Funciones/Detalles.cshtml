@@ -52,7 +52,7 @@
             {
                 @Html.Hidden("idFuncion", funcion.ID_Funcion)
                 @Html.Hidden("idUsuario", (int)Session["usuarioId"])
-                @Html.Hidden("asientosSeleccionados", "", new { id = "asientosSeleccionados" })
+                <div id="asientosContainer"></div>
 
                 <button type="submit" class="btn btn-lg btn-purple w-100" disabled id="btnConfirmar">
                     Continuar a Pago
@@ -110,6 +110,7 @@
 <script>
     const asientosSeleccionados = new Set();
     const btnConfirmar = document.getElementById('btnConfirmar');
+    const contenedor = document.getElementById('asientosContainer');
 
     function toggleAsiento(btn) {
         const idAsiento = btn.dataset.asiento;
@@ -122,8 +123,19 @@
             asientosSeleccionados.add(idAsiento);
         }
 
-        document.getElementById('asientosSeleccionados').value = Array.from(asientosSeleccionados).join(',');
+        updateHiddenInputs();
         btnConfirmar.disabled = asientosSeleccionados.size === 0;
+    }
+
+    function updateHiddenInputs() {
+        contenedor.innerHTML = ''; // Limpiar antes de volver a crear
+        asientosSeleccionados.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'asientos';
+            input.value = id;
+            contenedor.appendChild(input);
+        });
     }
 
     function confirmarSeleccion() {
