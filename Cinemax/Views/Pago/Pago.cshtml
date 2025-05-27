@@ -14,7 +14,8 @@
     <div class="card shadow-sm">
         <div class="card-body p-4">
             <h1 class="card-title mb-4">Datos personales</h1>
-
+            <p>Precio por asiento: <strong>$@ViewBag.PrecioXasiento</strong></p>
+            <p>Total a pagar: <strong>$@ViewBag.Total</strong></p>
             <form id="paymentForm" action="@Url.Action("ProcesarPago", "Pago")" method="post">
                 <div class="mb-4">
                     <div class="mb-3">
@@ -32,7 +33,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Teléfono</label>
                         <input type="tel" class="form-control" id="telefono" name="telefono" pattern="[0-9]{8,12}" required>
-                        <small class="form-text text-muted">Debe contener entre 8 y 12 dígitos.</small>
+                        <small class="form-text text-muted">Debe contener 8 dígitos.</small>
                     </div>
                 </div>
 

@@ -22,11 +22,15 @@ namespace Cinemax.Controllers
             {
                 asientos = new List<int> { 1, 2, 3, 4 };
             }
+            var funcion = db.Funcion.FirstOrDefault(f => f.ID_Funcion == id_funcion);
 
             TempData["id_Funcion"] = id_funcion;
             TempData["id_Usuario"] = id_Usuario;
             TempData["Asientos"] = asientos;
+            ViewBag.PrecioXasiento= funcion.FUN_Precio;
+            ViewBag.Total = funcion.FUN_Precio * asientos.Count;
             return View();
+
         }
         [HttpPost]
         public ActionResult ProcesarPago(FormCollection form)
@@ -105,7 +109,14 @@ namespace Cinemax.Controllers
                 var asientosInfo = db.Asiento.Where(a => asientos.Contains(a.ID_Asiento))
                                              .Select(a => a.ASI_Fila + a.ASI_Numero.ToString()).ToList();
 
-                string datosQR = $"Reserva: {nuevoQR}\nCliente: {nombre} {apellido}\nPelicula: {pelicula.PEL_Titulo}\nAsientos: {string.Join(", ", asientosInfo)}";
+                string datosQR = $"Reserva: {nuevoQR}\n" +
+                 $"Cliente: {nombre} {apellido}\n" +
+                 $"Pelicula: {pelicula.PEL_Titulo}\n" +
+                 $"Asientos: {string.Join(", ", asientosInfo)}\n" +
+                 $"Precio por entrada: ${funcion.FUN_Precio}\n" +
+                 $"Total: ${funcion.FUN_Precio * asientos.Count}";
+
+
 
 
                 // Generar imagen QR
@@ -124,11 +135,17 @@ namespace Cinemax.Controllers
                     mail.To.Add(email);
                     mail.Subject = "Confirmación de Reserva - Cinemax";
                     mail.Body = $"Hola {nombre},\n\nGracias por tu reserva.\n\n" +
-                                $"Pelicula: {pelicula.PEL_Titulo}\n" +
-                                $"Fecha y hora: {funcion.FUN_Fechahora}\n" +
-                                $"Asientos: {string.Join(", ", asientosInfo)}\n" +
-                                $"Código de Reserva: {nuevoQR}\n\n" +
-                                "Adjunto encontrarás tu código QR.";
+                    $"Pelicula: {pelicula.PEL_Titulo}\n" +
+                    $"Fecha y hora: {funcion.FUN_Fechahora}\n" +
+                    $"Precio por entrada: ${funcion.FUN_Precio}\n" +
+                    $"Cantidad de asientos: {asientos.Count}\n" +
+                    $"Total pagado: ${funcion.FUN_Precio * asientos.Count}\n" +
+                    $"Asientos: {string.Join(", ", asientosInfo)}\n" +
+                    $"Código de Reserva: {nuevoQR}\n\n" +
+                    "Adjunto encontrarás tu código QR.";
+
+
+
 
                     mail.Attachments.Add(new Attachment(qrPath));
 
