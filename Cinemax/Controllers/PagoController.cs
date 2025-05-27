@@ -28,6 +28,7 @@ namespace Cinemax.Controllers
             return View();
 
         }
+
         [HttpPost]
         public ActionResult ProcesarPago(FormCollection form)
         {
@@ -96,6 +97,14 @@ namespace Cinemax.Controllers
                         ID_Reserva = idReserva,
                         ID_Asiento = idAsiento
                     });
+                    // Cambiar el estado del asiento a reservado (ID_EstadoAsiento = 3) en la tabla FuncionAsiento o al id 2 si esta ocupado 
+                    var funcionAsiento = db.FuncionAsiento
+                        .FirstOrDefault(fa => fa.ID_Funcion == id_funcion && fa.ID_Asiento == idAsiento);
+
+                    if (funcionAsiento != null)
+                    {
+                        funcionAsiento.ID_EstadoAsiento = 2;
+                    }
                 }
                 db.SaveChanges();
 
