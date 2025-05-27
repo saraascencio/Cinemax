@@ -1,11 +1,61 @@
 ﻿@{
     ViewBag.Title = "Dashboard Cliente";
     Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    var nombre = ViewBag.Nombre ?? "Cliente";
 }
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title fw-semibold mb-4">Bienvenido a tu Panel de Cliente</h5>
-        <p class="mb-0">Explora la cartelera, realiza tus reservas y consulta tu historial desde el menú lateral.</p>
+@section styles {
+    <style>
+        .dashboard-welcome {
+            background-color: #f8f9fc;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+
+            .dashboard-welcome:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+            }
+
+            .dashboard-welcome h2 {
+                font-weight: 700;
+                color: #2a60d8;
+            }
+
+            .dashboard-welcome p {
+                color: #6c757d;
+            }
+
+            .dashboard-welcome img {
+                width: 100px;
+                margin: 1rem auto;
+            }
+
+        .dashboard-btn {
+            margin-top: 1rem;
+        }
+    </style>
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-8">
+        <div class="dashboard-welcome">
+            <h2><iconify-icon icon="ph:ticket-duotone"></iconify-icon> ¡Nos alegra verte, @nombre!</h2>
+            <p class="mt-3">
+                Bienvenido/a a <strong>Cinemax</strong>, donde cada película es una nueva aventura.<br />
+                Prepárate para reír, soñar y emocionarte. ¡Que comience el show!
+            </p>
+
+            <img src="~/Content/assets/images/logos/logocine.png" alt="Cinemax Logo" />
+
+            <div class="dashboard-btn">
+                <a href="@Url.Action("Index", "Cartelera")" class="btn btn-primary btn-lg">
+                    <iconify-icon icon="mdi:movie-open-play"></iconify-icon> Ver cartelera ahora
+                </a>
+            </div>
+        </div>
     </div>
 </div>
