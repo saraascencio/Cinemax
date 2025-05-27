@@ -1,0 +1,202 @@
+﻿@model List<Cinemax.ViewModels.HistorialReservaViewModel>
+
+@{
+    ViewBag.Title = "Historial de reservas";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+}
+
+@section styles {
+    <style>
+        .table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa !important;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 8px;
+        }
+
+        .page-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #6c757d;
+            background-color: transparent;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .page-dot:hover {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+
+        .page-dot.active {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+
+        .page-dot.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .page-dots-separator {
+            color: #6c757d;
+            margin: 0 5px;
+            font-weight: bold;
+        }
+    </style>
+}
+
+<h2 class="mb-4">Historial de reservas</h2>
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Historial", "Cliente", FormMethod.Get))
+        {
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <input type="text" name="Busqueda" class="form-control" placeholder="Buscar por nombre o QR..."
+                           value="@ViewBag.BusquedaActual" />
+
+                    <div class="input-group-append d-flex align-items-center" style="gap: 8px;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                        @if (!string.IsNullOrEmpty(ViewBag.BusquedaActual))
+                        {
+                            <a href="@Url.Action("Historial", "Cliente")" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Limpiar
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-hover text-center align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Fecha</th>
+                        <th>Película</th>
+                        <th>Precio ($)</th>
+                        <th>Sala</th>
+                        <th>Asientos</th>
+                        <th>QR</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        int index = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.Fecha</td>
+                                <td>@item.Pelicula</td>
+                                <td>@item.Precio.ToString("F2")</td>
+                                <td>@item.Sala</td>
+                                <td>@item.Asientos</td>
+                                <td>@item.CodigoQR</td>
+                                <td>
+                                    <span class="badge bg-@(item.Estado == "Pendiente" ? "warning" : item.Estado == "Cancelada" ? "danger" : "success")">
+                                        @item.Estado
+                                    </span>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-muted">No tienes reservas aún.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (ViewBag.TotalPaginas > 1)
+        {
+            <div class="pagination-container">
+                @{
+                    int paginaActual = ViewBag.PaginaActual;
+                    int totalPaginas = ViewBag.TotalPaginas;
+                    int rango = 2;
+                    int inicio = Math.Max(1, paginaActual - rango);
+                    int fin = Math.Min(totalPaginas, paginaActual + rango);
+                }
+
+                @if (paginaActual > 1)
+                {
+                    <a class="page-dot" href="@Url.Action("Historial", new { Busqueda = ViewBag.BusquedaActual, pagina = paginaActual - 1 })">‹</a>
+                }
+                else
+                {
+                    <span class="page-dot disabled">‹</span>
+                }
+
+                @if (inicio > 1)
+                {
+                    <a class="page-dot" href="@Url.Action("Historial", new { Busqueda = ViewBag.BusquedaActual, pagina = 1 })">1</a>
+                    if (inicio > 2)
+                    {
+                        <span class="page-dots-separator">...</span>
+                    }
+                }
+
+                @for (int i = inicio; i <= fin; i++)
+                {
+                    if (i == paginaActual)
+                    {
+                        <span class="page-dot active">@i</span>
+                    }
+                    else
+                    {
+                        <a class="page-dot" href="@Url.Action("Historial", new { Busqueda = ViewBag.BusquedaActual, pagina = i })">@i</a>
+                    }
+                }
+
+                @if (fin < totalPaginas)
+                {
+                    if (fin < totalPaginas - 1)
+                    {
+                        <span class="page-dots-separator">...</span>
+                    }
+                    <a class="page-dot" href="@Url.Action("Historial", new { Busqueda = ViewBag.BusquedaActual, pagina = totalPaginas })">@totalPaginas</a>
+                }
+
+                @if (paginaActual < totalPaginas)
+                {
+                    <a class="page-dot" href="@Url.Action("Historial", new { Busqueda = ViewBag.BusquedaActual, pagina = paginaActual + 1 })">›</a>
+                }
+                else
+                {
+                    <span class="page-dot disabled">›</span>
+                }
+            </div>
+        }
+    </div>
+</div>
