@@ -10,102 +10,320 @@
 }
 
 <style>
+    /* Panel derecho como tarjeta */
+    .detalle-funcion {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        padding: 24px;
+        height: 100%;
+    }
+
+    /* Botón morado principal */
+    .btn-purple {
+        background-color: #6f42c1;
+        color: white;
+        border: none;
+    }
+
+        .btn-purple:hover {
+            background-color: #5a32a3;
+        }
+
+    /* Alerta azul suave */
+    .alert-light {
+        background-color: #f0f4f8;
+        border-left: 4px solid #6f42c1;
+    }
+
+    /* Badge verde */
+    .badge.bg-success {
+        background-color: #16a34a !important;
+    }
+
+    /* Gap entre columnas en desktop */
+    .row.g-5 {
+        --bs-gutter-x: 3rem;
+    }
+
+    /* Responsive para tarjeta */
+    @@media (max-width: 768px) {
+        .detalle-funcion {
+            margin-top: 20px;
+        }
+    }
+
+    /* Botones de asiento */
     .asiento-btn {
         width: 44px;
         height: 44px;
         font-size: 0.8rem;
-        border-radius: 50px;
+        border-radius: 50%;
         padding: 0;
+        transition: all 0.2s ease;
     }
 
+        .asiento-btn.seleccionado {
+            background-color: #6f42c1 !important;
+            color: white;
+            font-weight: bold;
+            transform: scale(1.05);
+        }
+
         .asiento-btn.ocupado {
-            background-color: #e74c3c;
+            background-color: #e74c3c !important;
             border-color: #e74c3c;
             color: white;
             cursor: not-allowed;
         }
 
-        .asiento-btn.seleccionado {
-            background-color: #6f42c1;
+    .asiento-row {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Leyenda púrpura */
+    .bg-purple {
+        background-color: #6f42c1 !important;
+    }
+    /* Contenedor general */
+    .seat-chart {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* STAGE y Lobby */
+    .stage, .lobby {
+        width: 60%;
+        background: #e0e0e0;
+        text-align: center;
+        padding: 8px 0;
+        border-radius: 4px;
+        margin: 12px 0;
+        font-weight: bold;
+    }
+
+    /* Cada fila de asientos */
+    .seat-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    /* Letras de fila */
+    .row-label {
+        width: 24px;
+        text-align: center;
+        font-weight: bold;
+        margin: 0 8px;
+    }
+
+    /* Grupo de botones asientos */
+    .seat-group {
+        display: flex;
+        gap: 6px;
+    }
+
+    /* Botones asientos */
+    .seat {
+        width: 36px;
+        height: 36px;
+        border: 1px solid #bbb;
+        border-radius: 4px;
+        background: white;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .seat:hover:not(.ocupado):not(.seleccionado) {
+            background: #f0f0f0;
+        }
+
+        .seat.ocupado {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .seat.seleccionado {
+            background: #6f42c1;
+            border-color: #6f42c1;
             color: white;
         }
+
+    .legend .seat {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border: 1px solid #bbb;
+        border-radius: 4px;
+        background: white;
+    }
+
+        .legend .seat.seleccionado {
+            background: #6f42c1;
+            border-color: #6f42c1;
+        }
+
+        .legend .seat.ocupado {
+            background: #e74c3c;
+            border-color: #e74c3c;
+        }
+    /* Imagen llena altura de columna */
+    .col-md-6 > img {
+        height: 100%;
+        object-fit: cover;
+    }
 </style>
 
+
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-5">
-            <img src="@funcion.Pelicula.PEL_ImagenURL" class="img-fluid rounded shadow" alt="Portada de @funcion.Pelicula.PEL_Titulo" />
+    <!-- Usamos gx-5 para espacio horizontal, gy-4 para vertical -->
+    <div class="row gx-5 gy-4 align-items-start align-items-stretch">
+
+        <!-- Imagen: col-12 en móvil, col-lg-4 (≈33%) en grande -->
+        <div class="col-12 col-lg-4">
+            <img src="@funcion.Pelicula.PEL_ImagenURL"
+                 class="img-fluid rounded shadow h-100"
+                 style="object-fit: cover;"
+                 alt="Portada de @funcion.Pelicula.PEL_Titulo" />
         </div>
-        <div class="col-md-7">
-            <h2>@funcion.Pelicula.PEL_Titulo</h2>
-            <span class="badge bg-success mb-2">Precio</span>
-            <h3 class="fw-bold">$@funcion.FUN_Precio.ToString("F2") por persona</h3>
-            <p><strong>Fecha y hora:</strong> @funcion.FUN_Fechahora.ToString("dddd dd MMMM yyyy, hh:mm tt")</p>
-            <p><strong>Sala:</strong> @funcion.Sala.SAL_Nombre</p>
 
-            <!-- Botón para abrir modal de asientos -->
-            <button type="button" class="btn btn-purple mb-4" data-bs-toggle="modal" data-bs-target="#modalAsientos">
-                Seleccionar Asientos
-            </button>
+        <!-- Detalles: col-12 en móvil, col-lg-8 (≈67%) en grande -->
+        <div class="col-12 col-lg-8 d-flex">
+            <div class="detalle-funcion w-100 h-100">
+                <h2 class="fw-bold mb-1">@funcion.Pelicula.PEL_Titulo</h2>
+                <p class="text-muted mb-2">
+                    <span class="badge bg-success">Precio</span>
+                    <span class="ms-2 text-primary fw-semibold">
+                        $@funcion.FUN_Precio.ToString("F2") por persona
+                    </span>
+                </p>
 
-            @using (Html.BeginForm("Pago", "Pago", FormMethod.Post, new { onsubmit = "return validarSeleccion();" }))
-            {
-                @Html.Hidden("id_funcion", funcion.ID_Funcion)
-                @Html.Hidden("id_Usuario", (int)Session["usuarioId"])
-                <div id="asientosContainer"></div>
+                <p class="mb-1">
+                    <strong>Fecha y hora:</strong>
+                    @funcion.FUN_Fechahora.ToString("dddd dd MMMM yyyy, hh:mm tt")
+                </p>
+                <p class="mb-3"><strong>Sala:</strong> @funcion.Sala.SAL_Nombre</p>
 
-                <button type="submit" class="btn btn-lg btn-purple w-100" disabled id="btnConfirmar">
-                    Continuar a Pago
+                <div id="asientosSeleccionadosTexto" class="mb-3 d-none">
+                    <strong>🎟️ Tus asientos:</strong>
+                    <span id="listaAsientos"></span>
+                </div>
+
+                <button type="button"
+                        class="btn btn-purple mb-3"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalAsientos">
+                    Seleccionar Asientos
                 </button>
-            }
 
+                @using (Html.BeginForm("Pago", "Pago", FormMethod.Post, new { onsubmit = "return validarSeleccion();" }))
+                {
+                    @Html.Hidden("id_funcion", funcion.ID_Funcion)
+                    @Html.Hidden("id_Usuario", (int)Session["usuarioId"])
+                    <div id="asientosContainer"></div>
 
-            <div class="alert alert-light mt-3" role="alert">
-                <strong>Tomar en cuenta:</strong> Si su pago es exitoso, recibirá un PDF de confirmación y código QR para ingresar a la sala.
+                    <button type="submit"
+                            class="btn btn-lg btn-purple w-100"
+                            disabled id="btnConfirmar">
+                        Continuar a Pago
+                    </button>
+                }
+
+                <div class="alert alert-light mt-3" role="alert">
+                    <strong>Tomar en cuenta:</strong>
+                    Si su pago es exitoso, recibirá un PDF de confirmación y código QR para ingresar a la sala.
+                </div>
             </div>
         </div>
+
     </div>
 </div>
+
+
+
 
 <!-- Modal de selección de asientos -->
 <div class="modal fade" id="modalAsientos" tabindex="-1" aria-labelledby="modalAsientosLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
+
             <div class="modal-header">
                 <h5 class="modal-title" id="modalAsientosLabel">Selecciona tus asientos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+
             <div class="modal-body">
-                <div id="gridAsientos" class="d-flex flex-column gap-2">
+                <div class="seat-chart">
+
+                    <!-- Stage -->
+                    <div class="stage">STAGE</div>
+
+                    <!-- Seat rows -->
                     @foreach (var fila in asientosAgrupados)
                     {
-                        <div class="d-flex justify-content-center gap-2 asiento-row">
-                            @foreach (var asientoFunc in fila.OrderBy(a => a.Asiento.ASI_Numero))
-                            {
-                                var codigo = asientoFunc.Asiento.ASI_Fila + asientoFunc.Asiento.ASI_Numero.ToString();
-                                var ocupado = asientoFunc.ID_EstadoAsiento == 2;
-                                var idAsiento = asientoFunc.ID_Asiento;
+                        var rowLabel = fila.Key;
+                        <div class="seat-row">
+                            <!-- Etiqueta izquierda -->
+                            <div class="row-label">@rowLabel</div>
 
-                                <button type="button"
-                                        class="btn asiento-btn @(ocupado ? "ocupado" : "btn-outline-secondary")"
-                                        data-asiento="@idAsiento"
-                                        @(ocupado ? "disabled" : "")
-                                        onclick="toggleAsiento(this)">
-                                    @codigo
-                                </button>
+                            <!-- Asientos: del mayor al menor -->
+                            <div class="seat-group">
+                                @foreach (var asientoFunc in fila.OrderByDescending(a => a.Asiento.ASI_Numero))
+                                {
+                                    var codigo = asientoFunc.Asiento.ASI_Fila + asientoFunc.Asiento.ASI_Numero;
+                                    var ocupado = asientoFunc.ID_EstadoAsiento == 2;
+                                    var idAsiento = asientoFunc.ID_Asiento;
+                                    <button type="button"
+                                            class="seat @(ocupado ? "ocupado" : "")"
+                                            title="@codigo"
+                                            data-asiento="@idAsiento"
+                                            @(ocupado ? "disabled" : "")
+                                            onclick="toggleAsiento(this)">
+                                        @codigo
+                                    </button>
+                                }
+                            </div>
 
-                            }
+                            <!-- Etiqueta derecha -->
+                            <div class="row-label">@rowLabel</div>
                         </div>
                     }
+
+                    <!-- Lobby -->
+                    <div class="lobby">Lobby</div>
                 </div>
             </div>
+            <!-- Leyenda de colores -->
+            <div class="legend d-flex justify-content-center gap-4 mb-3">
+                <div class="d-flex align-items-center gap-1">
+                    <span class="seat"></span>
+                    <small>Disponible</small>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="seat seleccionado"></span>
+                    <small>Seleccionado</small>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="seat ocupado"></span>
+                    <small>Ocupado</small>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-purple" onclick="confirmarSeleccion()">Confirmar selección</button>
             </div>
+
         </div>
     </div>
 </div>
+
 
 <script>
     const asientosSeleccionados = new Set();
@@ -113,22 +331,23 @@
     const contenedor = document.getElementById('asientosContainer');
 
     function toggleAsiento(btn) {
-        const idAsiento = btn.dataset.asiento;
+        const id = btn.dataset.asiento;
         if (btn.classList.contains('ocupado')) return;
 
         btn.classList.toggle('seleccionado');
-        if (asientosSeleccionados.has(idAsiento)) {
-            asientosSeleccionados.delete(idAsiento);
+        if (asientosSeleccionados.has(id)) {
+            asientosSeleccionados.delete(id);
         } else {
-            asientosSeleccionados.add(idAsiento);
+            asientosSeleccionados.add(id);
         }
 
         updateHiddenInputs();
+        updateAsientosTexto();
         btnConfirmar.disabled = asientosSeleccionados.size === 0;
     }
 
     function updateHiddenInputs() {
-        contenedor.innerHTML = ''; // Limpiar antes de volver a crear
+        contenedor.innerHTML = '';
         asientosSeleccionados.forEach(id => {
             const input = document.createElement('input');
             input.type = 'hidden';
@@ -138,8 +357,23 @@
         });
     }
 
+    function updateAsientosTexto() {
+        const container = document.getElementById("asientosSeleccionadosTexto");
+        const lista = document.getElementById("listaAsientos");
+        if (asientosSeleccionados.size > 0) {
+            container.classList.remove("d-none");
+            lista.innerText = Array.from(asientosSeleccionados).map(id => {
+                const btn = document.querySelector(`[data-asiento='${id}']`);
+                return btn?.innerText || id;
+            }).join(", ");
+        } else {
+            container.classList.add("d-none");
+            lista.innerText = "";
+        }
+    }
+
     function confirmarSeleccion() {
-        var modal = bootstrap.Modal.getInstance(document.getElementById('modalAsientos'));
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalAsientos'));
         modal.hide();
     }
 
