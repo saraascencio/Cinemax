@@ -212,6 +212,13 @@
                     <strong>Fecha y hora:</strong>
                     @funcion.FUN_Fechahora.ToString("dddd dd MMMM yyyy, hh:mm tt")
                 </p>
+                <!-- Duración -->
+                <p class="mb-1">
+                    <strong>Duración:</strong>
+                    @String.Format("{0}h {1}m",
+                        funcion.Pelicula.PEL_Duracion.Hours,
+                        funcion.Pelicula.PEL_Duracion.Minutes)
+                </p>
                 <p class="mb-3"><strong>Sala:</strong> @funcion.Sala.SAL_Nombre</p>
 
                 <div id="asientosSeleccionadosTexto" class="mb-3 d-none">
