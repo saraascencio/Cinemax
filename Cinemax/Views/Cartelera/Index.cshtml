@@ -7,6 +7,24 @@
     var fechaInputValue = (fechaSeleccionada ?? DateTime.Today).ToString("yyyy-MM-dd");
     var generoSeleccionado = ViewBag.GeneroSeleccionado as string;
 }
+<style>
+    .card:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+        transition: all 0.2s ease;
+    }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    .text-truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
 <!-- Flatpickr CSS & JS desde CDN -->
 <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -43,7 +61,7 @@
                        id="fechaSelector"
                        name="fecha"
                        class="d-none"
-                       value="@fechaInputValue?.ToString("yyyy-MM-dd")" />
+                       value="@fechaInputValue?.ToString(" yyyy-MM-dd")" />
             </div>
 
 
@@ -58,35 +76,49 @@
         {
             <div class="col-md-6 mb-4">
                 <a href="@Url.Action("Detalles", "Funciones", new { id = f.ID_Funcion })" class="text-decoration-none text-dark">
-                    <div class="card flex-row shadow-sm rounded overflow-hidden" style="min-height: 200px; height: 100%;">
-                        <!-- Imagen -->
+                    <div class="card flex-row shadow-sm border-0 rounded-4 overflow-hidden h-100" style="min-height: 220px;">
+                        <!-- Imagen izquierda -->
                         <div class="col-4 p-0">
                             <img src="@f.Pelicula.PEL_ImagenURL"
                                  alt="@f.Pelicula.PEL_Titulo"
-                                 class="img-fluid h-100 w-100 object-fit-cover" />
+                                 class="img-fluid h-100 w-100 object-fit-cover"
+                                 style="object-fit: cover;">
                         </div>
 
-                        <!-- Contenido -->
-                        <div class="col-8 p-3 d-flex flex-column justify-content-between" style="min-height: 200px;">
+                        <!-- Contenido derecho -->
+                        <div class="col-8 d-flex flex-column justify-content-between p-3">
+                            <!-- Título y sinopsis -->
                             <div>
-                                <h5 class="fw-bold text-truncate" title="@f.Pelicula.PEL_Titulo">@f.Pelicula.PEL_Titulo</h5>
-
-                                <!-- Sinopsis limitada -->
-                                <p class="text-muted small mb-2" style="max-height: 48px; overflow: hidden; text-overflow: ellipsis;">
+                                <h5 class="fw-semibold text-dark mb-1" title="@f.Pelicula.PEL_Titulo">@f.Pelicula.PEL_Titulo</h5>
+                                <p class="text-dark small mb-3" style="max-height: 40px; overflow: hidden;">
                                     @f.Pelicula.PEL_Sinopsis
                                 </p>
-
-                                <p class="mb-0"><strong>Hora:</strong> @f.FUN_Fechahora.ToString("hh:mm tt")</p>
-                                <p class="mb-0"><strong>Sala:</strong> @f.Sala.SAL_Nombre</p>
-                                <p class="mb-0"><strong>Precio:</strong> $@f.FUN_Precio.ToString("F2")</p>
+                                
                             </div>
 
-                            <!-- Enlace inferior -->
-                            <span class="text-primary mt-2 small">Ver detalles →</span>
+                            
+
+
+                            <!-- Detalles (verticales con separación) -->
+                            <div class="text-dark small mb-3">
+                                <div class="mb-4"><strong>Hora:</strong> @f.FUN_Fechahora.ToString("hh:mm tt")</div>
+                                <div class="mb-4"><strong>Duración:</strong> @f.Pelicula.PEL_Duracion.ToString(@"hh\:mm") min</div>
+                                <div class="mb-4"><strong>Sala:</strong> @f.Sala.SAL_Nombre</div>
+                                <div><strong>Precio:</strong> $@f.FUN_Precio.ToString("F2")</div>
+                            </div>
+
+
+                            <!-- Enlace -->
+                            <div class="mt-auto">
+                                <span class="text-primary small fw-semibold">Ver detalles →</span>
+                            </div>
                         </div>
                     </div>
                 </a>
             </div>
+
+
+
         }
     </div>
 
