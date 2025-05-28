@@ -23,6 +23,11 @@ namespace Cinemax.Controllers
             TempData["id_Funcion"] = id_funcion;
             TempData["id_Usuario"] = id_Usuario;
             TempData["Asientos"] = asientos;
+            if(asientos == null || asientos.Count == 0)
+            {
+                asientos = Session["Asientos2"] as List<int>;
+                TempData["Asientos"] = asientos;
+            }
             ViewBag.PrecioXasiento = funcion.FUN_Precio;
             ViewBag.Total = funcion.FUN_Precio * asientos.Count;
             return View();
@@ -47,7 +52,8 @@ namespace Cinemax.Controllers
                 if (!email.Contains(".com") || telefono.Length != 8)
                 {
                     TempData["ErrorPago"] = "Ingrese un correo válido y número de teléfono correcto.";
-                    return RedirectToAction("Pago", new { id_funcion, id_usuario, asientos });
+                    Session["Asientos2"] = asientos;
+                    return RedirectToAction("Pago", new { id_funcion, id_usuario });
                 }
 
                 string nuevoQR = "QR10";
