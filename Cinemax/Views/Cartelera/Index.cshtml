@@ -8,67 +8,115 @@
     var generoSeleccionado = ViewBag.GeneroSeleccionado as string;
 }
 <style>
-    .card:hover {
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-        transform: translateY(-2px);
-        transition: all 0.2s ease;
+    .chip {
+        padding: 8px 20px;
+        border-radius: 20px;
+        background-color: #F5F5F5; /* Fondo suave */
+        color: #1e293b; /* Texto oscuro */
+        font-weight: 500;
+        border: none;
+        transition: all 0.2s ease-in-out;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 38px;
     }
 
-    .object-fit-cover {
-        object-fit: cover;
+        .chip:hover {
+            background-color: #e2e8f0;
+            cursor: pointer;
+        }
+
+        .chip.active {
+            background-color: #AF52DE; /* Violeta moderno */
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .chip.icon {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+        }
+
+            .chip.icon:hover {
+                background-color: #ddd6fe;
+            }
+
+    /* Alineación del calendario */
+    #btnCalendario {
+        width: 42px;
+        height: 38px;
+        padding: 0;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        background-color: .chip {
+        padding: 8px 20px;
+        border-radius: 20px;
+        background-color: #f1f5f9; /* Fondo suave */
+        color: #1e293b; /* Texto oscuro */
+        font-weight: 500;
+        border: none;
+        transition: all 0.2s ease-in-out;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 38px;
     }
 
-    .text-truncate {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    #btnCalendario:hover {
+        background-color: #e0e7ff;
+    }
+
+    html, body {
+        overflow-x: hidden;
+    }
+
+    @@media (max-width: 768px) {
+        .flatpickr-calendar {
+            transform: translateX(-25%);
+        }
     }
 </style>
 
 <!-- Flatpickr CSS & JS desde CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-        <h2 class="fw-bold d-flex align-items-center mb-2 mb-md-0">
-            <i class="bi bi-film fs-4 me-2 text-primary"></i>
-            🎬 Cartelera de películas - @(fechaSeleccionada?.ToString("dd/MM/yyyy") ?? "Fecha no disponible")
-        </h2>
-    </div>
 
     <!-- Filtros: Géneros + Fecha -->
     <form method="get" class="mb-4">
         <div class="d-flex flex-wrap gap-2 align-items-center">
             <a href="@Url.Action("Index", "Cartelera", new { genero = "", fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })"
-               class="btn rounded-pill @(string.IsNullOrEmpty(generoSeleccionado) ? "btn-primary text-white" : "btn-outline-secondary")">Todos</a>
+               class="chip @(string.IsNullOrEmpty(generoSeleccionado) ? "active" : "")">Todos</a>
 
             @foreach (var g in ViewBag.Generos as List<string>)
             {
                 <a href="@Url.Action("Index", "Cartelera", new { genero = g, fecha = fechaSeleccionada?.ToString("yyyy-MM-dd") })"
-                   class="btn rounded-pill @(generoSeleccionado == g ? "btn-primary text-white" : "btn-outline-secondary")">@g</a>
+                   class="chip @(generoSeleccionado == g ? "active" : "")">@g</a>
             }
-            <!-- Selector de fecha en botón visual -->
+
+            <!-- Selector de fecha como chip -->
+            <!-- Botón tipo chip con icono de Bootstrap -->
             <div style="position: relative;">
                 <button type="button" id="btnCalendario"
-                        class="btn btn-light rounded-pill d-flex align-items-center justify-content-center"
-                        style="width: 44px; height: 44px;">
-                    <iconify-icon icon="mdi:calendar-month" width="24" height="24"></iconify-icon>
+                class="chip icon"
+                 aria-label="Seleccionar fecha">
+                <i class="bi bi-calendar-event" style="color: #AF52DE; font-size: 1.2rem;"></i>
                 </button>
 
-                <!-- Input que Flatpickr usa, pero no se ve -->
                 <input type="text"
-                       id="fechaSelector"
-                       name="fecha"
-                       class="d-none"
-                       value="@fechaInputValue?.ToString(" yyyy-MM-dd")" />
+                 id="fechaSelector"
+                name="fecha"
+                class="d-none"
+             value="@fechaInputValue?.ToString("yyyy-MM-dd")" />
             </div>
-
-
-
 
         </div>
     </form>
+
 
     <!-- Tarjetas de películas -->
     <div class="row">
@@ -93,10 +141,10 @@
                                 <p class="text-dark small mb-3" style="max-height: 40px; overflow: hidden;">
                                     @f.Pelicula.PEL_Sinopsis
                                 </p>
-                                
+
                             </div>
 
-                            
+
 
 
                             <!-- Detalles (verticales con separación) -->
@@ -194,12 +242,13 @@
         const flat = flatpickr(input, {
             dateFormat: "Y-m-d",
             defaultDate: input.value || new Date(),
+            positionElement: trigger,         // 🔥 Este es el truco clave
+            position: "auto left",            // Intenta abrirlo hacia la izquierda
             onChange: function (selectedDates, dateStr) {
                 const genero = new URLSearchParams(window.location.search).get("genero") || "";
                 const url = `@Url.Action("Index", "Cartelera")?fecha=${dateStr}&genero=${genero}`;
                 window.location.href = url;
-            },
-            appendTo: trigger.parentElement
+            }
         });
 
         trigger.addEventListener("click", function () {
@@ -207,3 +256,4 @@
         });
     });
 </script>
+
