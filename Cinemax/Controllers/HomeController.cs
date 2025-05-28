@@ -8,6 +8,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Cinemax.Controllers
 {
@@ -83,11 +85,49 @@ namespace Cinemax.Controllers
             return View();
         }
 
-
+        [HttpGet]
         public ActionResult Registro()
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult Registro(string Name, string Email, string Password)
+        {
+            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+            {
+                ViewBag.ErrorRegistro = "Todos los campos son obligatorios.";
+                return View();
+            }
+
+            var usuarioExistente = _dbContext.Usuario.FirstOrDefault(u => u.USU_Email == Email);
+            if (usuarioExistente != null)
+            {
+                ViewBag.ErrorRegistro = "Ya existe una cuenta con este correo electrónico.";
+                return View();
+            }
+            if (Password.Length < 8)
+            {
+                ViewBag.ErrorRegistro = "La contraseña debe tener al menos 8 caracteres.";
+                return View();
+            }
+
+            var nuevoUsuario = new Usuario
+            {
+                USU_Nombre = Name,
+                USU_Email = Email,
+                USU_Password = HashPassword(Password), 
+                USU_FRegistro = DateTime.Now,
+                ID_Rol = 3 // Rol Cliente
+            };
+
+            _dbContext.Usuario.Add(nuevoUsuario);
+            _dbContext.SaveChanges();
+
+            TempData["RegistroExitoso"] = true;
+            return RedirectToAction("Login");
+        }
+
 
         [Autenticacion]
         public ActionResult Logout()
@@ -127,9 +167,17 @@ namespace Cinemax.Controllers
             base.Dispose(disposing);
         }
 
-      
 
-      
+
+        private string HashPassword(string password)
+        {
+            using (var sha = SHA256.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(password);
+                var hash = sha.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
+        }
 
     }
 }
