@@ -135,7 +135,7 @@
                 <button type="button" id="btnCalendario"
                 class="chip icon"
                  aria-label="Seleccionar fecha">
-                <i class="bi bi-calendar-event" style="color: #AF52DE; font-size: 1.2rem;"></i>
+                <i class="fa-solid fa-calendar-day" style="color: #AF52DE; font-size: 1.2rem;"></i>
                 </button>
 
                 <input type="text"
@@ -273,8 +273,8 @@
         const flat = flatpickr(input, {
             dateFormat: "Y-m-d",
             defaultDate: input.value || new Date(),
-            positionElement: trigger,         // 🔥 Este es el truco clave
-            position: "auto left",            // Intenta abrirlo hacia la izquierda
+            positionElement: trigger,         
+            position: "auto left",            
             onChange: function (selectedDates, dateStr) {
                 const genero = new URLSearchParams(window.location.search).get("genero") || "";
                 const url = `@Url.Action("Index", "Cartelera")?fecha=${dateStr}&genero=${genero}`;

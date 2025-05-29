@@ -88,10 +88,7 @@
         flex-wrap: wrap;
     }
 
-    /* Leyenda púrpura */
-    .bg-purple {
-        background-color: #6f42c1 !important;
-    }
+   
     /* Contenedor general */
     .seat-chart {
         display: flex;
@@ -131,57 +128,65 @@
         gap: 6px;
     }
 
-    /* Botones asientos */
-    .seat {
-        width: 36px;
-        height: 36px;
-        border: 1px solid #bbb;
-        border-radius: 4px;
-        background: white;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
 
-        .seat:hover:not(.ocupado):not(.seleccionado) {
-            background: #f0f0f0;
-        }
-
-        .seat.ocupado {
-            background: #e74c3c;
-            border-color: #e74c3c;
-            color: white;
-            cursor: not-allowed;
-        }
-
-        .seat.seleccionado {
-            background: #6f42c1;
-            border-color: #6f42c1;
-            color: white;
-        }
-
-    .legend .seat {
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        border: 1px solid #bbb;
-        border-radius: 4px;
-        background: white;
-    }
-
-        .legend .seat.seleccionado {
-            background: #6f42c1;
-            border-color: #6f42c1;
-        }
-
-        .legend .seat.ocupado {
-            background: #e74c3c;
-            border-color: #e74c3c;
-        }
+    
     /* Imagen llena altura de columna */
     .col-md-6 > img {
         height: 100%;
         object-fit: cover;
     }
+
+
+    .seat {
+        width: 44px;
+        height: 44px;
+        background: none;
+        border: none;
+        font-size: 1.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d; /* Disponible */
+        transition: transform 0.2s, color 0.2s;
+        position: relative;
+        cursor: pointer;
+    }
+
+        .seat:hover:not(.ocupado):not(.seleccionado) {
+            transform: scale(1.1);
+        }
+
+        .seat.seleccionado {
+            color: #6f42c1; /* Morado puro */
+        }
+
+        .seat.ocupado {
+            color: #e74c3c;
+            cursor: not-allowed;
+        }
+
+        .seat::after {
+            content: attr(title);
+            position: absolute;
+            bottom: -12px;
+            font-size: 0.55rem;
+            color: #333;
+        }
+
+    /* Ajuste para leyenda */
+    .legend .fa-couch {
+        font-size: 1.5rem;
+    }
+
+    /* Ajuste para leyenda */
+    .legend .seat {
+        font-size: 1.2rem;
+        width: auto;
+        height: auto;
+        border: none;
+        background: none;
+    }
+
 </style>
 
 
@@ -273,7 +278,7 @@
                 <div class="seat-chart">
 
                     <!-- Stage -->
-                    <div class="stage">STAGE</div>
+                    <div class="stage">PANTALLA</div>
 
                     <!-- Seat rows -->
                     @foreach (var fila in asientosAgrupados)
@@ -296,8 +301,10 @@
                                             data-asiento="@idAsiento"
                                             @(ocupado ? "disabled" : "")
                                             onclick="toggleAsiento(this)">
-                                        @codigo
+                                        <i class="fa-solid fa-couch"></i>
                                     </button>
+
+
                                 }
                             </div>
 
@@ -306,25 +313,26 @@
                         </div>
                     }
 
-                    <!-- Lobby -->
-                    <div class="lobby">Lobby</div>
+
+
                 </div>
             </div>
             <!-- Leyenda de colores -->
-            <div class="legend d-flex justify-content-center gap-4 mb-3">
-                <div class="d-flex align-items-center gap-1">
-                    <span class="seat"></span>
-                    <small>Disponible</small>
-                </div>
-                <div class="d-flex align-items-center gap-1">
-                    <span class="seat seleccionado"></span>
-                    <small>Seleccionado</small>
-                </div>
-                <div class="d-flex align-items-center gap-1">
-                    <span class="seat ocupado"></span>
-                    <small>Ocupado</small>
-                </div>
-            </div>
+          <div class="legend d-flex justify-content-center gap-4 mb-3">
+    <div class="d-flex align-items-center gap-1">
+        <i class="fa-solid fa-couch" style="color: #6c757d; font-size: 1.3rem;"></i>
+        <small>Disponible</small>
+    </div>
+    <div class="d-flex align-items-center gap-1">
+        <i class="fa-solid fa-couch" style="color: #6f42c1; font-size: 1.3rem;"></i>
+        <small>Seleccionado</small>
+    </div>
+    <div class="d-flex align-items-center gap-1">
+        <i class="fa-solid fa-couch" style="color: #e74c3c; font-size: 1.3rem;"></i>
+        <small>Ocupado</small>
+    </div>
+</div>
+
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
