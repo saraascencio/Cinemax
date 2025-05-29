@@ -64,5 +64,7 @@ namespace Cinemax.ViewModels
             Peliculas = new List<SelectListItem>();
             MetodosPago = new List<SelectListItem>();
         }
+
+    
     }
 }

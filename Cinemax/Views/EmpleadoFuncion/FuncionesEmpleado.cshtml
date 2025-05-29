@@ -1,0 +1,421 @@
+﻿
+@{
+    ViewBag.Title = "FuncionesEmpleado";
+    Layout = "~/Views/Shared/_LayoutEmpleado.cshtml";
+}
+
+@model Cinemax.ViewModels.FuncionesEmpleadoViewModel
+
+
+<div class="funciones-empleado-container">
+    <!-- Barra de búsqueda estilo navbar -->
+    <div class="search-navbar">
+        <div class="search-container">
+            @using (Html.BeginForm("BuscarFunciones", "EmpleadoFuncion", FormMethod.Post, new { @class = "search-form" }))
+            {
+                <div class="search-input-group">
+                    <div class="search-input-container">
+                        @Html.DropDownList("peliculaBusqueda", Model.Peliculas, new
+                        {
+                            @class = "search-select",
+                            @id = "peliculaSelect"
+                        })
+                        <input type="text" id="peliculaInput" class="search-input" placeholder="O escriba para buscar..." />
+                    </div>
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+
+            }
+        </div>
+        <div class="fecha-info">
+            <i class="fas fa-calendar-alt"></i>
+            <span>@Model.FechaConsulta.ToString("dddd, dd 'de' MMMM 'de' yyyy")</span>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="funciones-content">
+        @if (Model.FuncionesPorSala == null || !Model.FuncionesPorSala.Any())
+        {
+            <div class="no-funciones">
+                <div class="no-funciones-icon">
+                    <i class="fas fa-film"></i>
+                </div>
+                <h3>No hay funciones disponibles</h3>
+                <p>
+                    @if (!string.IsNullOrEmpty(Model.PeliculaBusqueda))
+                    {
+                        <text>No se encontraron funciones para la película "@Model.PeliculaBusqueda" en el día de hoy.</text>
+                    }
+                    else
+                    {
+                        <text>No hay funciones programadas para el día de hoy.</text>
+                    }
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="salas-grid">
+                @foreach (var sala in Model.FuncionesPorSala)
+                {
+                    <div class="sala-container">
+                        <!-- Encabezado de sala -->
+                        <div class="sala-header">
+                            <h2 class="sala-title">@sala.SalaNombre</h2>
+                        </div>
+
+                        <!-- Grid de funciones -->
+                        <div class="funciones-grid">
+                            @foreach (var funcion in sala.Funciones)
+                            {
+                                <div class="funcion-card">
+                                    <div class="funcion-header">
+                                        <h4 class="pelicula-titulo">@funcion.PeliculaTitulo</h4>
+                                        <div class="funcion-hora">@funcion.Hora</div>
+                                    </div>
+
+                                    <div class="funcion-info">
+                                        <div class="info-item">
+                                            <i class="fas fa-dollar-sign"></i>
+                                            <span>$@funcion.Precio</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-chair"></i>
+                                            <span>@funcion.AsientosDisponibles/@funcion.TotalAsientos disponibles</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="ocupacion-bar">
+                                        <div class="ocupacion-progress" style="width: @(funcion.TotalAsientos > 0 ? (funcion.AsientosOcupados * 100 / funcion.TotalAsientos) : 0)%"></div>
+                                    </div>
+
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .funciones-empleado-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+
+    .search-navbar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 15px 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .search-container {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .search-form {
+        margin: 0;
+    }
+
+    .search-input-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .search-input-container {
+        position: relative;
+        flex: 1;
+        display: flex;
+        gap: 10px;
+    }
+
+    .search-select {
+        flex: 1;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 25px;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #333;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+        .search-select:focus {
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+    .search-input {
+        flex: 1;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 25px;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #333;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+        .search-input:focus {
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+    .search-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 16px;
+    }
+
+        .search-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+    .fecha-info {
+        color: white;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        min-width: 200px;
+        justify-content: flex-end;
+    }
+
+ 
+    .funciones-content {
+        min-height: 400px;
+    }
+
+    .no-funciones {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .no-funciones-icon {
+        font-size: 4rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .no-funciones h3 {
+        color: #999;
+        margin-bottom: 10px;
+    }
+
+ 
+    .salas-grid {
+        display: grid;
+        gap: 30px;
+    }
+
+    .sala-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+        .sala-container:hover {
+            transform: translateY(-5px);
+        }
+
+    .sala-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .sala-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: white;
+    }
+
+ 
+    .funciones-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 25px;
+    }
+
+    .funcion-card {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+    }
+
+        .funcion-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+    .funcion-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pelicula-titulo {
+        color: #343a40;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .funcion-hora {
+        background: #007bff;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        min-width: 70px;
+        text-align: center;
+    }
+
+    .funcion-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+        .info-item i {
+            color: #28a745;
+        }
+
+    .ocupacion-bar {
+        background: #e9ecef;
+        height: 6px;
+        border-radius: 3px;
+        margin-bottom: 15px;
+        overflow: hidden;
+    }
+
+    .ocupacion-progress {
+        background: linear-gradient(90deg, #28a745 0%, #ffc107 70%, #dc3545 100%);
+        height: 100%;
+        transition: width 0.3s ease;
+    }
+
+    .funcion-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+        .funcion-actions .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .funcion-actions .btn:hover {
+                transform: translateY(-2px);
+            }
+</style>
+
+@section Scripts {
+
+
+    <script>
+        $(document).ready(function () {
+
+            $('#peliculaInput').on('input', function () {
+                var searchValue = $(this).val().toLowerCase();
+
+          
+                var foundOption = $('#peliculaSelect option').filter(function () {
+                    return $(this).val() !== '' &&
+                        $(this).text().toLowerCase().includes(searchValue);
+                }).first();
+
+           
+                if (foundOption.length) {
+                    $('#peliculaSelect').val(foundOption.val());
+                } else {
+                    $('#peliculaSelect').val(''); 
+                }
+            });
+
+    
+            $('#peliculaSelect').change(function () {
+                var selectedText = $(this).find('option:selected').text();
+                $('#peliculaInput').val(selectedText === 'Todas las películas' ? '' : selectedText);
+            });
+
+          
+            $('form').on('submit', function () {
+                var inputValue = $('#peliculaInput').val().toLowerCase();
+
+                var foundOption = $('#peliculaSelect option').filter(function () {
+                    return $(this).val() !== '' &&
+                        $(this).text().toLowerCase().includes(inputValue);
+                }).first();
+
+                if (foundOption.length) {
+                    $('#peliculaSelect').val(foundOption.val());
+                } else {
+                    $('#peliculaSelect').val('');
+                }
+            });
+        });
+    </script>
+
+}
+
+
+
+

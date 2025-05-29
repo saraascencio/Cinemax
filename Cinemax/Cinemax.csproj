@@ -254,6 +254,7 @@
     <Compile Include="Controllers\ClienteController.cs" />
     <Compile Include="Controllers\EmpleadoCrearController.cs" />
     <Compile Include="Controllers\CarteleraController.cs" />
+    <Compile Include="Controllers\EmpleadoFuncionController.cs" />
     <Compile Include="Controllers\EmpleadoHistorialController.cs" />
     <Compile Include="Controllers\EmpleadoMetricasController.cs" />
     <Compile Include="Controllers\EmpleadoPDFController.cs" />
@@ -337,10 +338,14 @@
     <Compile Include="ViewModels\CrearReservaEViewModel.cs" />
     <Compile Include="ViewModels\CarteleraViewModel.cs" />
     <Compile Include="ViewModels\EditarReservaViewModel.cs" />
+    <Compile Include="ViewModels\FuncionDetalleEmpleadoViewModel.cs" />
     <Compile Include="ViewModels\FuncionDetalleViewModel.cs" />
+    <Compile Include="ViewModels\FuncionesEmpleadoViewModel.cs" />
+    <Compile Include="ViewModels\FuncionSalaEViewModel.cs" />
     <Compile Include="ViewModels\HistorialReservaViewModel.cs" />
     <Compile Include="ViewModels\ReservaViewModel.cs" />
     <None Include="Views\Cliente\Historial.cshtml" />
+    <Content Include="Views\EmpleadoFuncion\FuncionesEmpleado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
