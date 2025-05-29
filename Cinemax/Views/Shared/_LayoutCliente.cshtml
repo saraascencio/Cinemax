@@ -15,31 +15,28 @@
 
 
     <style>
+    .left-sidebar {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        top: 0 !important;
+    }
 
-        .left-sidebar {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-            top: 0 !important;
-        }
+    .page-wrapper {
+        padding-top: 0 !important;
+    }
 
+    .brand-logo {
+        margin-top: 0 !important;
+        padding-top: 15px;
+    }
 
-        .page-wrapper {
-            padding-top: 0 !important;
-        }
+    .left-sidebar > div:first-child {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
 
-
-        .brand-logo {
-            margin-top: 0 !important;
-            padding-top: 15px;
-        }
-
-
-        .left-sidebar > div:first-child {
-            padding-top: 0 !important;
-            margin-top: 0 !important;
-        }
-
-
+    /* Solo aplicar position fixed en pantallas grandes */
+    @@media (min-width: 1200px) {
         aside.left-sidebar {
             position: fixed !important;
             top: 0 !important;
@@ -47,10 +44,35 @@
             margin-top: 0 !important;
             padding-top: 0 !important;
         }
+    }
 
-        .app-header {
-            margin-top: -65px !important;
+    /* En pantallas pequeñas, permitir que la sidebar se oculte */
+    @@media (max-width: 1199.98px) {
+        aside.left-sidebar {
+            position: fixed;
+            top: 0;
+            left: -270px; /* Ocultar por defecto en móviles */
+            transition: left 0.3s ease;
+            z-index: 1050;
+            width: 270px;
+            height: 100vh;
         }
+
+        /* Mostrar sidebar cuando tenga la clase 'show' */
+        aside.left-sidebar.show {
+            left: 0;
+        }
+
+        /* Ajustar el contenido principal en móviles */
+        .body-wrapper {
+            margin-left: 0;
+            width: 100%;
+        }
+    }
+
+    .app-header {
+        margin-top: -65px !important;
+    }
     </style>
     @RenderSection("styles", required: false)
 
@@ -159,5 +181,58 @@
     <script src="~/Content/assets/js/app.min.js"></script>
     <script src="~/Content/assets/libs/simplebar/dist/simplebar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+
+
+
+ 
+    <script>
+        $(document).ready(function () {
+            // Toggle sidebar en móviles
+            $('#headerCollapse').on('click', function (e) {
+                e.preventDefault();
+                if ($(window).width() < 1200) {
+                    $('.left-sidebar').toggleClass('show');
+                }
+            });
+
+            // Cerrar sidebar (botón X)
+            $('#sidebarCollapse').on('click', function (e) {
+                e.preventDefault();
+                if ($(window).width() < 1200) {
+                    $('.left-sidebar').removeClass('show');
+                }
+            });
+
+            // Cerrar sidebar al hacer click en un enlace del menú
+            $('.sidebar-nav a').on('click', function () {
+                if ($(window).width() < 1200) {
+                    $('.left-sidebar').removeClass('show');
+                }
+            });
+
+            // Cerrar sidebar al hacer click fuera de ella
+            $(document).on('click', function (e) {
+                if ($(window).width() < 1200) {
+                  
+                    if (!$(e.target).closest('.left-sidebar').length && !$(e.target).closest('#headerCollapse').length) {
+                        $('.left-sidebar').removeClass('show');
+                    }
+                }
+            });
+
+           
+            $(window).on('resize', function () {
+                if ($(window).width() >= 1200) {
+                    $('.left-sidebar').removeClass('show');
+                }
+            });
+
+            
+            if ($(window).width() < 1200) {
+                $('.left-sidebar').removeClass('show');
+            }
+        });
+    </script>
+
 </body>
 </html>
