@@ -8,7 +8,7 @@
 
         .cinema-layout {
             text-align: center;
-            background: #f2f7fb;
+            background: #F1F5F9;
             padding: 30px 20px;
             border-radius: 8px;
             margin: 20px 0;
@@ -46,6 +46,7 @@
             font-size: 16px;
         }
 
+        /* Estilos para los asientos */
         .seat {
             width: 28px;
             height: 28px;
@@ -59,28 +60,30 @@
             position: relative;
         }
 
-            .seat.available {
+       
+
+            .seat.disponible {
                 background-color: #dc3545;
                 color: white;
             }
 
-                .seat.available:hover {
-                    background-color: #c82333;
-                    transform: scale(1.1);
-                }
+        .seat.disponible:hover {
+            background-color: #c82333;
+            transform: scale(1.1);
+        }
 
-            .seat.selected {
-                background-color: #28a745;
-                color: white;
-            }
+        .seat.selected {
+            background-color: #28a745;
+            color: white;
+        }
 
-            .seat.occupied {
-                background-color: #6c757d;
-                color: #adb5bd;
-                cursor: not-allowed;
-            }
+        .seat.ocupado {
+            background-color: #6c757d;
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
 
-        /* Leyenda */
+        /* Estilos para la leyenda */
         .legend {
             display: flex;
             justify-content: center;
@@ -103,17 +106,23 @@
             border-radius: 4px 4px 0 0;
         }
 
-            .legend-seat.available {
-                background-color: #dc3545;
-            }
+        .legend-seat.available {
+            background-color: #dc3545;
+        }
 
-            .legend-seat.selected {
-                background-color: #28a745;
-            }
+        .legend-seat.selected {
+            background-color: #28a745;
+        }
 
-            .legend-seat.occupied {
-                background-color: #6c757d;
-            }
+        .seat.occupied {
+            background-color: #6c757d;
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        .legend-seat.occupied {
+            background-color: #6c757d;
+        }
 
  
         .selection-info {
@@ -142,6 +151,7 @@
             font-size: 16px;
         }
 
+        /* Estilos para el mensaje de alerta */
         .alert {
             padding: 15px;
             margin-bottom: 20px;
@@ -155,21 +165,7 @@
             border-color: #bce8f1;
         }
 
-
-        .seat {
-            width: 24px;
-            height: 24px;
-            font-size: 8px;
-        }
-
-        .legend {
-            gap: 10px;
-        }
-
-        .selection-summary {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+       
     </style>
 }
 
@@ -353,7 +349,14 @@
         <div class="form-group" style="margin-top: 15px">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Guardar Reserva" class="btn btn-primary btn-lg" style="font-size: 14px;" />
-                @Html.ActionLink("Cerrar", "HistorialReservas", "EmpleadoHistorial", new { @class = "btn btn-default btn-cancel", style = "font-size: 14px;" })
+                @Html.ActionLink(
+    linkText: "Cerrar",
+    actionName: "HistorialReservas",
+    controllerName: "EmpleadoHistorial",
+    routeValues: null,
+    htmlAttributes: new { @class = "btn btn-default btn-cancel", style = "font-size: 14px;" }
+)
+
             </div>
         </div>
     </div>
@@ -515,7 +518,7 @@
 
        
             if ($('#btnLimpiarAsientos').length === 0) {
-                $('<button type="button" class="btn btn-warning" id="btnLimpiarAsientos" style="font-size: 14px; margin-left: 10px;">Limpiar Selección</button>')
+                $('<button type="button" class="btn btn-warning" id="btnLimpiarAsientos" style="font-size: 14px; margin-left: 10px; margin-top: 20px">Limpiar Selección</button>')
                     .insertAfter('#asientosSeleccionados')
                     .click(function() {
                         limpiarSeleccionAsientos();
@@ -617,7 +620,7 @@
     if (index > -1) {
   
         asientosSeleccionados.splice(index, 1);
-        seatButton.className = 'seat available';
+        seatButton.className = 'seat disponible';
     } else {
  
         asientosSeleccionados.push(asiento);
@@ -677,7 +680,7 @@
 
     
         document.querySelectorAll('.seat.selected').forEach(seat => {
-        seat.className = 'seat available';
+        seat.className = 'seat disponible';
     });
 
         actualizarInterfazSeleccion();
@@ -716,8 +719,11 @@
         }
     });
 
+
+            
   
-    if ($('#btnLimpiarAsientos').length === 0) {
+            if ($('#btnLimpiarAsientos').length === 0) {
+
         $('<button type="button" class="btn btn-warning" id="btnLimpiarAsientos" style="font-size: 14px; margin-left: 10px;">Limpiar Selección</button>')
             .insertAfter('#asientosSeleccionados')
             .closest('.form-group')

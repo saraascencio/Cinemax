@@ -201,6 +201,8 @@ namespace Cinemax.Controllers
             return Json(asientosConEstado);
         }
 
+
+
         [Autenticacion]
 
         [HttpPost]

@@ -408,6 +408,46 @@ namespace Cinemax.Controllers
             return asientosDisponibles;
         }
 
+        [Autenticacion]
+        [HttpPost]
+        public JsonResult ObtenerAsientosDisponiblesParaEdicion(int funcionId, int reservaId)
+        {
+            var salaId = _dbContext.Funcion.Find(funcionId).ID_Sala;
+
+            var todosAsientos = _dbContext.Asiento
+                .Where(a => a.ID_Sala == salaId)
+                .OrderBy(a => a.ASI_Fila)
+                .ThenBy(a => a.ASI_Numero)
+                .ToList();
+
+            // Obtener asientos ocupados (excluyendo los de esta reserva)
+            var asientosOcupadosIds = _dbContext.Boleto
+                .Where(b => b.Reserva.ID_Funcion == funcionId &&
+                           b.Reserva.ID_Reserva != reservaId &&
+                           b.ID_Asiento != null)
+                .Select(b => b.ID_Asiento.Value)
+                .Distinct()
+                .ToList();
+
+            // Obtener asientos de esta reserva
+            var asientosReservadosIds = _dbContext.Boleto
+                .Where(b => b.Reserva.ID_Reserva == reservaId && b.ID_Asiento != null)
+                .Select(b => b.ID_Asiento.Value)
+                .Distinct()
+                .ToList();
+
+            var asientosConEstado = todosAsientos.Select(a => new
+            {
+                Id = a.ID_Asiento,
+                Nombre = $"{a.ASI_Fila}{a.ASI_Numero}",
+                Fila = a.ASI_Fila,
+                Numero = a.ASI_Numero,
+                Estado = asientosReservadosIds.Contains(a.ID_Asiento) ? "reserved" :
+                        asientosOcupadosIds.Contains(a.ID_Asiento) ? "occupied" : "available"
+            }).ToList();
+
+            return Json(asientosConEstado);
+        }
 
         [Autenticacion]
         [HttpPost]
