@@ -20,30 +20,52 @@
             top: 0 !important;
         }
 
-
         .page-wrapper {
             padding-top: 0 !important;
         }
-
 
         .brand-logo {
             margin-top: 0 !important;
             padding-top: 15px;
         }
 
-
         .left-sidebar > div:first-child {
             padding-top: 0 !important;
             margin-top: 0 !important;
         }
 
+        @@media (min-width: 1200px) {
+            aside.left-sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+        }
 
-        aside.left-sidebar {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            margin-top: 0 !important;
-            padding-top: 0 !important;
+    
+        @@media (max-width: 1199.98px) {
+            aside.left-sidebar {
+                position: fixed;
+                top: 0;
+                left: -270px; 
+                transition: left 0.3s ease;
+                z-index: 1050;
+                width: 270px;
+                height: 100vh;
+            }
+
+                
+                aside.left-sidebar.show {
+                    left: 0;
+                }
+
+            
+            .body-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
         }
 
         .app-header {
@@ -138,7 +160,7 @@
                                         <i class="ti ti-menu-2"></i>
                                     </a>
                                 </li>
-                               
+
                             </ul>
                             <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                                 <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
@@ -150,12 +172,12 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                             <div class="message-body">
-                                                
-                                                    <a href="@Url.Action("MiPerfil", "EmpleadoMetricas")" class="d-flex align-items-center gap-2 dropdown-item">
-                                                        <i class="ti ti-user fs-6"></i>
-                                                        <p class="mb-0 fs-3">Mi Perfil</p>
-                                                    </a>
-                                                
+
+                                                <a href="@Url.Action("MiPerfil", "EmpleadoMetricas")" class="d-flex align-items-center gap-2 dropdown-item">
+                                                    <i class="ti ti-user fs-6"></i>
+                                                    <p class="mb-0 fs-3">Mi Perfil</p>
+                                                </a>
+
                                                 <form method="post" action="@Url.Action("Logout", "Home")">
                                                     <button type="submit" class="btn btn-outline-primary mx-3 mt-2 d-block">Cerrar sesión</button>
                                                 </form>
@@ -182,6 +204,53 @@
         <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script>
+            $(document).ready(function () {
+            
+                $('#headerCollapse').on('click', function (e) {
+                    e.preventDefault();
+                    if ($(window).width() < 1200) {
+                        $('.left-sidebar').toggleClass('show');
+                    }
+                });
+
+                $('#sidebarCollapse').on('click', function (e) {
+                    e.preventDefault();
+                    if ($(window).width() < 1200) {
+                        $('.left-sidebar').removeClass('show');
+                    }
+                });
+
+                
+                $('.sidebar-nav a').on('click', function () {
+                    if ($(window).width() < 1200) {
+                        $('.left-sidebar').removeClass('show');
+                    }
+                });
+
+              
+                $(document).on('click', function (e) {
+                    if ($(window).width() < 1200) {
+
+                        if (!$(e.target).closest('.left-sidebar').length && !$(e.target).closest('#headerCollapse').length) {
+                            $('.left-sidebar').removeClass('show');
+                        }
+                    }
+                });
+
+
+                $(window).on('resize', function () {
+                    if ($(window).width() >= 1200) {
+                        $('.left-sidebar').removeClass('show');
+                    }
+                });
+
+
+                if ($(window).width() < 1200) {
+                    $('.left-sidebar').removeClass('show');
+                }
+            });
+        </script>
 
         @RenderSection("scripts", required: false)
 </body>
