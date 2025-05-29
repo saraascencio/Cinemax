@@ -7,6 +7,10 @@
     var fechaInputValue = (fechaSeleccionada ?? DateTime.Today).ToString("yyyy-MM-dd");
     var generoSeleccionado = ViewBag.GeneroSeleccionado as string;
 }
+<!-- Flatpickr CSS & JS desde CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <style>
     .pagination .page-link {
         border-radius: 12px !important;
@@ -79,19 +83,15 @@
         padding: 0;
         border-radius: 20px;
         border: 1px solid #e5e7eb;
-        background-color: .chip {
-        padding: 8px 20px;
-        border-radius: 20px;
-        background-color: #f1f5f9; /* Fondo suave */
-        color: #1e293b; /* Texto oscuro */
+        background-color: #f1f5f9; /* color suave como en .chip */
+        color: #1e293b;
         font-weight: 500;
-        border: none;
         transition: all 0.2s ease-in-out;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        height: 38px;
     }
+
 
     #btnCalendario:hover {
         background-color: #e0e7ff;
@@ -107,13 +107,86 @@
         }
     }
 
+    .flatpickr-calendar {
+        font-family: 'Poppins', sans-serif;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: none;
+    }
+
+    .flatpickr-day {
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+
+        .flatpickr-day:hover {
+            background: #ddd6fe;
+            color: #6f42c1;
+        }
+
+        .flatpickr-day.today {
+            border: 1px dashed #6f42c1;
+            background-color: #f3e8ff;
+        }
+        .flatpickr-day.today:hover {
+        background: #6f42c1;
+        font-weight: bold;
+        }
+
+        .flatpickr-day.selected {
+            background: #6f42c1 !important;
+            color: white !important;
+        }
+
+    .flatpickr-weekday {
+        color: #6f42c1;
+        font-weight: 600;
+    }
+
+    /* Estilo para barra superior del calendario */
+    .flatpickr-months {
+        background-color: #f3e8ff; /* violeta claro */
+        color: #6f42c1;
+        border-bottom: 1px solid #e0d7f3;
+        font-family: 'Poppins', sans-serif;
+        padding: 4px 0;
+    }
+
+    .flatpickr-monthDropdown-months,
+    .flatpickr-current-month input.cur-year {
+        color: #6f42c1;
+        font-weight: 600;
+        background: transparent;
+        border: none;
+    }
+
+        .flatpickr-current-month input.cur-year:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+    /* Flechas */
+    .flatpickr-prev-month, .flatpickr-next-month {
+        color: #6f42c1;
+        font-size: 1.4rem;
+        transition: all 0.2s ease;
+    }
+
+        .flatpickr-prev-month:hover, .flatpickr-next-month:hover {
+            background-color: #ede9fe;
+            border-radius: 50%;
+        }
+
+    .flatpickr-day.flatpickr-disabled {
+        color: #d1d5db !important;
+        background: #f9fafb;
+        cursor: not-allowed;
+    }
 
 </style>
 
-<!-- Flatpickr CSS & JS desde CDN -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 
 <div class="container py-4">
 
@@ -133,16 +206,16 @@
             <!-- Botón tipo chip con icono de Bootstrap -->
             <div style="position: relative;">
                 <button type="button" id="btnCalendario"
-                class="chip icon"
-                 aria-label="Seleccionar fecha">
-                <i class="fa-solid fa-calendar-day" style="color: #AF52DE; font-size: 1.2rem;"></i>
+                        class="chip icon"
+                        aria-label="Seleccionar fecha">
+                    <i class="fa-solid fa-calendar-day" style="color: #AF52DE; font-size: 1.2rem;"></i>
                 </button>
 
                 <input type="text"
-                 id="fechaSelector"
-                name="fecha"
-                class="d-none"
-             value="@fechaInputValue?.ToString("yyyy-MM-dd")" />
+                       id="fechaSelector"
+                       name="fecha"
+                       class="d-none"
+                       value="@fechaInputValue?.ToString(" yyyy-MM-dd")" />
             </div>
 
         </div>
@@ -273,13 +346,18 @@
         const flat = flatpickr(input, {
             dateFormat: "Y-m-d",
             defaultDate: input.value || new Date(),
-            positionElement: trigger,         
-            position: "auto left",            
+            positionElement: trigger,
+            locale: "es",
+            minDate: "today",
+            position: "auto left",
+            nextArrow: "<i class='fa-solid fa-chevron-right' style='color:#6f42c1'></i>",
+            prevArrow: "<i class='fa-solid fa-chevron-left' style='color:#6f42c1'></i>",
             onChange: function (selectedDates, dateStr) {
                 const genero = new URLSearchParams(window.location.search).get("genero") || "";
                 const url = `@Url.Action("Index", "Cartelera")?fecha=${dateStr}&genero=${genero}`;
                 window.location.href = url;
             }
+
         });
 
         trigger.addEventListener("click", function () {
