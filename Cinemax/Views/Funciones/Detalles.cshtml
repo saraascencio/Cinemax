@@ -334,10 +334,11 @@
 </div>
 
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-purple" onclick="confirmarSeleccion()">Confirmar selección</button>
-            </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="cancelarSeleccion()">Cancelar</button>
+
+              <button type="button" class="btn btn-purple" onclick="confirmarSeleccion()">Confirmar selección</button>
+          </div>
 
         </div>
     </div>
@@ -383,7 +384,7 @@
             container.classList.remove("d-none");
             lista.innerText = Array.from(asientosSeleccionados).map(id => {
                 const btn = document.querySelector(`[data-asiento='${id}']`);
-                return btn?.innerText || id;
+                return btn?.getAttribute('title') || id;
             }).join(", ");
         } else {
             container.classList.add("d-none");
@@ -403,4 +404,23 @@
         }
         return true;
     }
+    function cancelarSeleccion() {
+        // Quitar la clase 'seleccionado' de todos los botones de asiento
+        document.querySelectorAll('.seat.seleccionado').forEach(btn => {
+            btn.classList.remove('seleccionado');
+        });
+
+        // Vaciar el set de asientos seleccionados
+        asientosSeleccionados.clear();
+
+        // Actualizar visualmente y funcionalmente
+        updateHiddenInputs();
+        updateAsientosTexto();
+        btnConfirmar.disabled = true;
+
+        // Cerrar el modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalAsientos'));
+        modal.hide();
+    }
+
 </script>
